@@ -100,6 +100,7 @@ nix.settings.experimental-features = [ "nix-command" "flakes"];
     wezterm
     tmux
     git
+    gh
   ];
 
   home-manager = {
