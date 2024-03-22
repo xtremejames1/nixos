@@ -8,7 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./xtremejames1.nix
       inputs.home-manager.nixosModules.default
     ];
 
