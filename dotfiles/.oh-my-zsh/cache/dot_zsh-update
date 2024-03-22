@@ -1,0 +1,8 @@
+LAST_EPOCH=19798
+EXIT_STATUS=1
+ERROR='error: Your local changes to the following files would be overwritten by merge:
+	plugins/gitfast/update
+	plugins/history-substring-search/update-from-upstream.zsh
+Please commit your changes or stash them before you merge.
+Aborting
+There was an error updating. Try again later?'

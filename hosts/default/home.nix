@@ -44,6 +44,9 @@
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
+    # ".zshrc".source = dotfilePath+".zshrc";
+    ".zshrc".source = ~/nixos/dotfiles/.zshrc;
+
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose

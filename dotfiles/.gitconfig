@@ -1,0 +1,11 @@
+[core]
+[credential "https://github.com"]
+    helper = 
+    helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+    helper = 
+    helper = !'C:\\Program Files\\GitHub CLI\\gh.exe' auth git-credential
+	autocrlf = input
+[user]
+	name = James Xiao
+	email = xtremejames1@gmail.com
