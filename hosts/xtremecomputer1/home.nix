@@ -89,6 +89,12 @@ nixpkgs.config.allowUnfree = true;
     # EDITOR = "emacs";
   };
 
+  programs.git = {
+    enable = true;
+    userName  = "James Xiao";
+    userEmail = "xtremejames1@gmail.com";
+  };
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
