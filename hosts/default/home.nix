@@ -28,6 +28,7 @@
     pkgs.bat
     pkgs.fzf
     pkgs.fd
+    pkgs.broot
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -90,6 +91,24 @@
     initExtra = ''
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ~/p10k/p10k.zsh ]] || source ~/p10k/p10k.zsh
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(zoxide init --cmd cd zsh)"
+eval "$(atuin init zsh)"
+
+bindkey -v
+
+MODE_CURSOR_VIINS="#dce0b1 blinking bar"
+MODE_CURSOR_REPLACE="blinking underline #8a3129"
+MODE_CURSOR_VICMD="#5c7a38 blinking block"
+MODE_CURSOR_SEARCH="#ff00ff steady underline"
+MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
     '';
     oh-my-zsh = {
       enable = true;
@@ -97,7 +116,6 @@
       plugins = [
         "git"
 	"history"
-	"thefuck"
 	"tmux"
         "vi-mode"
 	"web-search"
