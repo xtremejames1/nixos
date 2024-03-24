@@ -15,9 +15,12 @@
   # release notes.
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
-nixpkgs.config.allowUnfree = true;
+nixpkgs.config = {
+allowUnfree = true;
+    vivaldi = {
+      enableWideVine = true;
+    };
+};
   home.packages = [
     pkgs.tmux
     pkgs.eza
@@ -31,16 +34,15 @@ nixpkgs.config.allowUnfree = true;
     pkgs.fd
     pkgs.broot
     pkgs.vivaldi
+    pkgs.widevine-cdm
     pkgs.neovim
-    
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+    pkgs.discord
+    pkgs.obsidian
+    pkgs.gcc
+    pkgs.xcape
+    pkgs.interception-tools
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
+    
     (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
     # # You can also create simple shell scripts directly inside your
@@ -61,7 +63,12 @@ nixpkgs.config.allowUnfree = true;
 
     # ".zshrc".source = config.lib.file.mkOutOfStoreSymlink "/home/xtremejames1/nixos/dotfiles/.zshrc";
     # ".zshrc".source = ~/nixos/dotfiles/.zshrc;
+    ".p10k.zsh".source = /home/xtremejames1/nixos/dotfiles/.p10k.zsh;
     ".wezterm.lua".source = /home/xtremejames1/nixos/dotfiles/.wezterm.lua;
+    ".config/nvim" = {
+      recursive = true;
+      source = /home/xtremejames1/nixos/dotfiles/.config/nvim;
+    };
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -86,7 +93,7 @@ nixpkgs.config.allowUnfree = true;
   #  /etc/profiles/per-user/xtremejames1/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "neovim";
   };
 
   programs.git = {
@@ -105,28 +112,29 @@ nixpkgs.config.allowUnfree = true;
       grep = "rg";
       cat = "bat";
     };
+
     initExtra = ''
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-      source ~/p10k/p10k.zsh
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='nvim'
-fi
+      source ~/.p10k.zsh
+      if [[ -n $SSH_CONNECTION ]]; then
+      export EDITOR='vim'
+      else
+      export EDITOR='nvim'
+      fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-eval "$(zoxide init --cmd cd zsh)"
-eval "$(atuin init zsh)"
+      eval "$(zoxide init --cmd cd zsh)"
+      eval "$(atuin init zsh)"
 
-bindkey -v
+      bindkey -v
 
-MODE_CURSOR_VIINS="#dce0b1 blinking bar"
-MODE_CURSOR_REPLACE="blinking underline #8a3129"
-MODE_CURSOR_VICMD="#5c7a38 blinking block"
-MODE_CURSOR_SEARCH="#ff00ff steady underline"
-MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
-MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
+      MODE_CURSOR_VIINS="#dce0b1 blinking bar"
+      MODE_CURSOR_REPLACE="blinking underline #8a3129"
+      MODE_CURSOR_VICMD="#5c7a38 blinking block"
+      MODE_CURSOR_SEARCH="#ff00ff steady underline"
+      MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+      MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
     '';
+
     oh-my-zsh = {
       enable = true;
       plugins = [

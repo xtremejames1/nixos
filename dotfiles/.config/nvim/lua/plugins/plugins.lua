@@ -20,20 +20,12 @@ local plugins = {
       -- Required.
       "nvim-lua/plenary.nvim",
     },
-    opts = {
-      workspaces = {
-        {
-          name = "vault",
-          path = "/media/xtremejames1/HDD 500GB/Documents/Windows Documents 12-28-23/Obsidian Vault/",
-        },
-      },
-    },
     config = function()
       require("obsidian").setup({
         workspaces = {
           {
             name = "vault",
-            path = "/media/xtremejames1/HDD 500GB/Documents/Windows Documents 12-28-23/Obsidian Vault/",
+            path = "~/Documents/Obsidian Vault/",
           },
         },
       })
