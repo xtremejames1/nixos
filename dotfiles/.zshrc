@@ -115,7 +115,7 @@ export OPEN_WEATHER_API_KEY="150c62809890af23fa63a826b87b4ced"
 alias vim=nvim
 alias grep=rg
 alias ls=exa
-alias cat=batcat
+alias cat=bat
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(zoxide init --cmd cd zsh)"

@@ -17,7 +17,6 @@
         modules = [
           ./hosts/default/configuration.nix
           ./users/xtremejames1.nix
-	  ./dotfiles/dotfiles.nix
           inputs.home-manager.nixosModules.default
         ];
       };

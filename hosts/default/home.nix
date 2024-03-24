@@ -18,6 +18,16 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
+    pkgs.tmux
+    pkgs.eza
+    pkgs.zoxide
+    pkgs.ripgrep
+    pkgs.atuin
+    pkgs.git
+    pkgs.gh
+    pkgs.bat
+    pkgs.fzf
+    pkgs.fd
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -26,7 +36,7 @@
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -44,8 +54,8 @@
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
-    # ".zshrc".source = dotfiles.dotfilePath+".zshrc";
-    ".zshrc".source = ~/nixos/dotfiles/.zshrc;
+    # ".zshrc".source = config.lib.file.mkOutOfStoreSymlink "/home/xtremejames1/nixos/dotfiles/.zshrc";
+    # ".zshrc".source = ~/nixos/dotfiles/.zshrc;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -71,6 +81,35 @@
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+  };
+
+  programs.zsh = {
+    enable = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+    initExtra = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+      [[ ! -f ~/p10k/p10k.zsh ]] || source ~/p10k/p10k.zsh
+    '';
+    oh-my-zsh = {
+      enable = true;
+      theme = "powerlevel10k/powerlevel10k";
+      plugins = [
+        "git"
+	"history"
+	"thefuck"
+	"tmux"
+        "vi-mode"
+	"web-search"
+	"ripgrep"
+	"last-working-dir"
+	"history"
+	"gh"
+	"fzf"
+	"fd"
+	"fasd"
+      ];
+    };
   };
 
   # Let Home Manager install and manage itself.
