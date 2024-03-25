@@ -19,6 +19,7 @@ nixpkgs.config = {
 allowUnfree = true;
     vivaldi = {
       enableWideVine = true;
+      proprietaryCodecs = true;
     };
 };
   home.packages = [
@@ -34,7 +35,9 @@ allowUnfree = true;
     pkgs.fd
     pkgs.broot
     pkgs.vivaldi
+    pkgs.vivaldi-ffmpeg-codecs
     pkgs.widevine-cdm
+    pkgs.chromium
     pkgs.neovim
     pkgs.discord
     pkgs.obsidian
@@ -72,6 +75,7 @@ allowUnfree = true;
       source = /home/xtremejames1/nixos/dotfiles/.config/nvim;
     };
     ".tmux.conf".source = /home/xtremejames1/nixos/dotfiles/.tmux.conf;
+
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
