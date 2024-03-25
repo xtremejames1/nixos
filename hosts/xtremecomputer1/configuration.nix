@@ -16,7 +16,7 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "xtremecomputer2"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -147,6 +147,14 @@ nix.settings.experimental-features = [ "nix-command" "flakes"];
   # networking.firewall.allowedUDPPorts = [ 22 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+  networking = {
+    interfaces = {
+            eno1.ipv4.addresses = [{
+                    address = "192.168.1.50";
+                    prefixLength = 24;
+                }];
+        };
+    };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

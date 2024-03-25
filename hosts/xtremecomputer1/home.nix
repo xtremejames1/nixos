@@ -41,6 +41,8 @@ allowUnfree = true;
     pkgs.gcc
     pkgs.xcape
     pkgs.interception-tools
+    pkgs.lazygit
+    pkgs.tldr
 
     
     (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
@@ -69,6 +71,7 @@ allowUnfree = true;
       recursive = true;
       source = /home/xtremejames1/nixos/dotfiles/.config/nvim;
     };
+    ".tmux.conf".source = /home/xtremejames1/nixos/dotfiles/.tmux.conf;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
