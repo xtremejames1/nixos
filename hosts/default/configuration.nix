@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -16,7 +16,7 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "xtremecomputer2"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -63,6 +63,29 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  services.interception-tools =
+    let
+      dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
+        MAPPINGS:
+          - KEY: KEY_CAPSLOCK
+            TAP: KEY_ESC
+            HOLD: KEY_LEFTCTRL
+      '';
+    in
+    {
+      enable = true;
+      plugins = lib.mkForce [
+        pkgs.interception-tools-plugins.dual-function-keys
+      ];
+      udevmonConfig = ''
+        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+          DEVICE:
+            NAME: "USB Keyboard"
+            EVENTS:
+              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+      '';
+    };
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -124,6 +147,14 @@ nix.settings.experimental-features = [ "nix-command" "flakes"];
   # networking.firewall.allowedUDPPorts = [ 22 ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+  networking = {
+    interfaces = {
+            eno1.ipv4.addresses = [{
+                    address = "192.168.1.50";
+                    prefixLength = 24;
+                }];
+        };
+    };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
