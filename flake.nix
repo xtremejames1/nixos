@@ -17,6 +17,7 @@
         modules = [
           ./hosts/default/configuration.nix
           ./users/xtremejames1.nix
+          ./variables.nix
           inputs.home-manager.nixosModules.default
         ];
       };
@@ -25,6 +26,7 @@
         modules = [
           ./hosts/xtremecomputer1/configuration.nix
           ./users/xtremejames1.nix
+          ./variables.nix
           inputs.home-manager.nixosModules.default
         ];
       };

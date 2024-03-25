@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
   home.username = "xtremejames1";
   home.homeDirectory = "/home/xtremejames1";
 
@@ -43,28 +41,12 @@ allowUnfree = true;
     pkgs.interception-tools
     pkgs.lazygit
     pkgs.tldr
-
+    pkgs.sqlite
     
     (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
   ];
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # ".zshrc".source = config.lib.file.mkOutOfStoreSymlink "/home/xtremejames1/nixos/dotfiles/.zshrc";
-    # ".zshrc".source = ~/nixos/dotfiles/.zshrc;
     ".p10k.zsh".source = /home/xtremejames1/nixos/dotfiles/.p10k.zsh;
     ".wezterm.lua".source = /home/xtremejames1/nixos/dotfiles/.wezterm.lua;
     ".config/nvim" = {
@@ -72,12 +54,6 @@ allowUnfree = true;
       source = /home/xtremejames1/nixos/dotfiles/.config/nvim;
     };
     ".tmux.conf".source = /home/xtremejames1/nixos/dotfiles/.tmux.conf;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
   };
 
   # Home Manager can also manage your environment variables through
