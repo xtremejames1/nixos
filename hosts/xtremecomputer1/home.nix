@@ -50,6 +50,8 @@ in
             pkgs.lazygit
             pkgs.tldr
             pkgs.nodejs
+            pkgs.sqlite
+            pkgs.obs-studio
 
             (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
