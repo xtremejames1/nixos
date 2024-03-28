@@ -3,7 +3,7 @@
 let dotfileDirectory = /home/xtremejames1/nixos/dotfiles;
 in
 {
-# Home Manager needs a bit of information about you and the paths it should
+
 # manage.
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
@@ -52,6 +52,13 @@ in
             pkgs.nodejs
             pkgs.sqlite
             pkgs.obs-studio
+            pkgs.cargo
+            pkgs.rustc
+            pkgs.kicad
+            pkgs.unzip
+            pkgs.cmake
+            pkgs.lollypop
+            pkgs.vlc
 
             (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
@@ -114,6 +121,7 @@ in
             vim = "nvim";
             grep = "rg";
             cat = "bat";
+            rb = "~/nixos/rebuild.sh";
         };
 
         initExtra = ''
