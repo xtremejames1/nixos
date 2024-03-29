@@ -59,6 +59,7 @@ in
             pkgs.cmake
             pkgs.lollypop
             pkgs.vlc
+            pkgs.subversion
 
             (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
