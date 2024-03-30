@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, unstable, inputs, ... }:
 
 {
   imports =
@@ -123,7 +123,10 @@ nix.settings.experimental-features = [ "nix-command" "flakes"];
   programs.zsh.enable = true;
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {
+      inherit inputs;
+      inherit unstable;
+     };
     users = {
       "xtremejames1" = import ./home.nix;
     };
