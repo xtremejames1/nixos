@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
 let dotfileDirectory = /home/xtremejames1/nixos/dotfiles;
 in
@@ -7,7 +7,7 @@ in
 # manage.
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
-    
+
 
 # This value determines the Home Manager release that your configuration is
 # compatible with. This helps avoid breakage when a new Home Manager release
@@ -18,13 +18,13 @@ in
 # release notes.
     home.stateVersion = "23.11"; # Please read the comment before changing.
 
-        nixpkgs.config = {
-            allowUnfree = true;
-            vivaldi = {
-                enableWideVine = true;
-                proprietaryCodecs = true;
-            };
+    nixpkgs.config = {
+        allowUnfree = true;
+        vivaldi = {
+            enableWideVine = true;
+            proprietaryCodecs = true;
         };
+    };
     home.packages = [
         pkgs.tmux
             pkgs.eza
@@ -49,17 +49,26 @@ in
             pkgs.interception-tools
             pkgs.lazygit
             pkgs.tldr
-            pkgs.nodejs
+            pkgs.nodejs_21
             pkgs.sqlite
             pkgs.obs-studio
-            pkgs.cargo
             pkgs.rustc
-            pkgs.kicad
+            inputs.nixpkgs-unstable.legacyPackages."${pkgs.system}".kicad
             pkgs.unzip
             pkgs.cmake
             pkgs.lollypop
             pkgs.vlc
             pkgs.subversion
+            pkgs.python3
+            pkgs.gdown
+            pkgs.rustup
+            pkgs.steam
+            pkgs.lutris
+            pkgs.bottles
+            pkgs.delta
+            pkgs.git-interactive-rebase-tool
+            pkgs.lua-language-server
+            pkgs.wineWowPackages.stable
 
             (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
@@ -132,20 +141,20 @@ in
                 export EDITOR='vim'
             else
                 export EDITOR='nvim'
-            fi
+                    fi
 
-            eval "$(zoxide init --cmd cd zsh)"
-            eval "$(atuin init zsh)"
+                    eval "$(zoxide init --cmd cd zsh)"
+                    eval "$(atuin init zsh)"
 
-            bindkey -v
+                    bindkey -v
 
-            MODE_CURSOR_VIINS="#dce0b1 blinking bar"
-            MODE_CURSOR_REPLACE="blinking underline #8a3129"
-            MODE_CURSOR_VICMD="#5c7a38 blinking block"
-            MODE_CURSOR_SEARCH="#ff00ff steady underline"
-            MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
-            MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
-            '';
+                    MODE_CURSOR_VIINS="#dce0b1 blinking bar"
+                    MODE_CURSOR_REPLACE="blinking underline #8a3129"
+                    MODE_CURSOR_VICMD="#5c7a38 blinking block"
+                    MODE_CURSOR_SEARCH="#ff00ff steady underline"
+                    MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+                    MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
+                    '';
 
         oh-my-zsh = {
             enable = true;

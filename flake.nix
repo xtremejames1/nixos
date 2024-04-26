@@ -1,8 +1,12 @@
 {
   description = "Nixos config flake";
 
-  inputs = {
+  inputs = 
+  {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -10,7 +14,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
+  let 
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+    unstable = nixpkgs-unstable.legacyPackages.${system};
+  in
+  {
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
@@ -22,7 +32,10 @@
         ];
       };
       xtremecomputer1 = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;};
+        specialArgs = {
+          inherit inputs;
+          inherit unstable;
+        };
         modules = [
           ./hosts/xtremecomputer1/configuration.nix
           ./users/xtremejames1.nix
