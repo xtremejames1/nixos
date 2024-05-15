@@ -4,7 +4,6 @@
   inputs = 
   {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
 
@@ -38,6 +37,7 @@
         };
         modules = [
           ./hosts/xtremecomputer1/configuration.nix
+          ./modules/terminal.nix
           ./users/xtremejames1.nix
           ./variables.nix
           inputs.home-manager.nixosModules.default

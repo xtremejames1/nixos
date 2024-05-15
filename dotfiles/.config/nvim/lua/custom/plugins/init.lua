@@ -48,7 +48,7 @@ return {
         workspaces = {
           {
             name = "vault",
-            path = "/media/xtremejames1/HDD 500GB/Documents/Windows Documents 12-28-23/Obsidian Vault/",
+            path = "/home/xtremejames1/Documents/ObsidianVault/",
           },
         },
       })
