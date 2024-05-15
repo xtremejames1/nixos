@@ -40,9 +40,9 @@
           ./modules/terminal.nix
           ./users/xtremejames1.nix
           ./variables.nix
-          inputs.home-manager.nixosModules.default
         ];
       };
+
     };
   };
 }
