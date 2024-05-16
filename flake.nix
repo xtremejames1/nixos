@@ -37,7 +37,6 @@
         };
         modules = [
           ./hosts/xtremecomputer1/configuration.nix
-          ./modules/terminal.nix
           ./users/xtremejames1.nix
           ./variables.nix
         ];

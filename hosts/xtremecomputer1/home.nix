@@ -1,17 +1,8 @@
 { config, pkgs, inputs, lib, ... }:
 
-let dotfileDirectory = "./../../dotfiles";
+let dotfileDirectory = ./../../dotfiles;
 in
 {
-    home-manager."xtremejames1" = {
-        extraSpecialArgs = { inherit inputs; };
-        users ={
-            modules = [
-                ./home.nix
-                    inputs.self.outputs.homeManagerModules.default
-            ];
-        };
-    };
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
 
