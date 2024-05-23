@@ -3,6 +3,10 @@
 let dotfileDirectory = ./../../dotfiles;
 in
 {
+    imports = [
+        ./../../packages/orcaslicer-appimage.nix
+    ];
+    
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
 
