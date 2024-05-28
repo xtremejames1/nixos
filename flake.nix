@@ -42,6 +42,17 @@
         ];
       };
 
+      chromebook = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          inherit unstable;
+        };
+        modules = [
+          ./hosts/chromebook/configuration.nix
+          ./users/xtremejames1.nix
+          ./variables.nix
+        ];
+      };
     };
   };
 }
