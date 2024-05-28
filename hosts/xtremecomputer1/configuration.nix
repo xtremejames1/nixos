@@ -4,6 +4,9 @@
 
 { config, lib, pkgs, inputs, ... }:
 
+let
+  unstable = import <nixos-unstable> {config = {allowUnfree = true; }; };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -172,6 +175,7 @@
     vim
     wget
     wezterm
+    unstable.caligula
   ];
 
   programs.zsh.enable = true;
