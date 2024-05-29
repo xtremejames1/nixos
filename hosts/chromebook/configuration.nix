@@ -4,6 +4,9 @@
 
 { config, pkgs, inputs, lib, ... }:
 
+let
+  unstable = import <nixos-unstable> {config = {allowUnfree = true; }; };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -113,10 +116,17 @@
 
   programs.zsh.enable = true;
 
+  nix.settings.experimental-features = [ "nix-command" "flakes"];
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   nixpkgs.config.allowUnfree = true;
 
+  environment.plasma5.excludePackages = with pkgs.plasma5Packages; [
+    oxygen
+    konsole
+    plasma-browser-integration
+  ];
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
@@ -124,19 +134,15 @@
     vivaldi
     vivaldi-ffmpeg-codecs
     widevine-cdm
-    neovim
     obsidian
     gcc
-    xcape
-    obs-studio
     vlc
-    git-interactive-rebase-tool
     lua-language-server
-    wineWowPackages.stable
     syncthing
     krita
     fastfetch
-    cargo
+    bemenu
+
 
     (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
   ];
