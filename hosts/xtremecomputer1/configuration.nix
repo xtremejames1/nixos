@@ -176,6 +176,7 @@ in
     wget
     wezterm
     unstable.caligula
+    inkscape
   ];
 
   programs.zsh.enable = true;
