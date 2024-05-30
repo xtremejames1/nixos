@@ -43,6 +43,8 @@ in
             gping
             neovim
             hyprpaper
+            libnotify
+            mako
 
 # # You can also create simple shell scripts directly inside your
 # # configuration. For example, this adds a command 'my-hello' to your
@@ -108,19 +110,103 @@ in
         };
     };
 
-    programs.waybar.enable = true;
+
+    programs.waybar = {
+        enable = true;
+        settings = {
+            mainBar = {
+                layer = "top";
+                position = "top";
+                height = 24;
+                modules-left = ["hyprland/workspaces"];
+                modules-center = ["hyprland/window"];
+                modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock"];
+                "hyprland/workspaces" = {
+                    format = "<sub>{icon}</sub>\n{windows}";
+                    format-window-separator = "\n";
+                    window-rewrite-default = "";
+                    window-rewrite = {
+                        "title<.*youtube.*>" = "";
+                        "title<.*github.*>" = "";
+                        "title<.*Vivaldi" = "";
+                        "title<.*vim.*>" = "";
+                        "wezterm" = "";
+                    };
+                };
+                tray = {
+                    icon-size = 21;
+                    spacing = 10;
+                };
+                clock = {
+                    format-alt = "{:%Y-%m-%d}";
+                };
+                cpu = {
+                    format = "{usage}% ";
+                };
+                memory = {
+                    format = "{}% ";
+                };
+                power-profiles-daemon = {
+                    format = "{icon}";
+                        tooltip-format = "Power profile: {profile}\nDriver: {driver}";
+                        tooltip = true;
+                        format-icons = {
+                            default = "";
+                            performance = "";
+                            balanced = "";
+                            power-saver = "";
+                        };
+                };
+                battery = {
+                    bat = "BAT0";
+                    states = {
+                        good = 95;
+                        warning = 30;
+                        critical = 15;
+                    };
+                    format = "{capacity}% {icon}";
+# // "format-good": ""; // An empty format will hide the module
+# // "format-full": "";
+                    format-icons = ["" "" "" "" ""];
+                };
+                network = {
+                    # interface = "wlp2s0";
+                    format-wifi = "{essid} ({signalStrength}%) ";
+                    format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
+                    format-disconnected = "Disconnected ⚠";
+                };
+                pulseaudio = {
+                    format = "{volume}% {icon}";
+                    format-bluetooth = "{volume}% {icon}";
+                    format-muted = "";
+                    format-icons = {
+                        headphones = "";
+                        handsfree = "";
+                        headset = "";
+                        phone = "";
+                        portable = "";
+                        car = "";
+                        default = ["" ""];
+                    };
+                    on-click = "pavucontrol";
+                };
+            };
+
+        };
+    };
     wayland.windowManager.hyprland = {
         enable = true;
         settings = {
             monitor = ",preferred,auto,auto";
 
 # launch apps on startup
-            exec-once = "waybar & hyprpaper";
+            exec-once = "waybar & hyprpaper & mako";
 
 # default apps
             "$terminal" = "wezterm";
             "$fileManager" = "dolphin";
             "$menu" = "bemenu-run --binding vim";
+            "$browser" = "vivaldi";
 
             env = [
                 "XCURSOR_SIZE,24"
@@ -211,14 +297,15 @@ in
                     "$mainMod, E, exec, $fileManager"
                     "$mainMod, V, togglefloating, "
                     "$mainMod, R, exec, $menu"
+                    "$mainMod, B, exec, $browser"
 #dwindle
                     "$mainMod, P, pseudo,"
                     "$mainMod, space, togglesplit,"
 # Move focus with mainMod + arrow keys
-                    "$mainMod, left, movefocus, h"
-                    "$mainMod, right, movefocus, l"
-                    "$mainMod, up, movefocus, k"
-                    "$mainMod, down, movefocus, j"
+                    "$mainMod, h, movefocus, l"
+                    "$mainMod, l, movefocus, r"
+                    "$mainMod, k, movefocus, u"
+                    "$mainMod, j, movefocus, d"
 # Switch workspaces with mainMod + [0-9]
                     "$mainMod, 1, workspace, 1"
                     "$mainMod, 2, workspace, 2"
@@ -248,11 +335,11 @@ in
                     "$mainMod, mouse_down, workspace, e+1"
                     "$mainMod, mouse_up, workspace, e-1"
                     ];
-                    bindm = [
+            bindm = [
 # Move/resize windows with mainMod + LMB/RMB and dragging
-                    "$mainMod, mouse:272, movewindow"
+                "$mainMod, mouse:272, movewindow"
                     "$mainMod, mouse:273, resizewindow"
-                    ];
+            ];
 
         };
         extraConfig = ''
@@ -281,6 +368,7 @@ in
             recursive = true;
             source = dotfileDirectory+"/.tmux";
         };
+        ".config/waybar/style.css".source = dotfileDirectory+"/.config/waybar/style.css";
     };
 # Home Manager can also manage your environment variables through
 # 'home.sessionVariables'. If you don't want to manage your shell through Home
