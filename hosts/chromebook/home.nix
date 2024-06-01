@@ -42,9 +42,18 @@ in
             bottom
             gping
             neovim
+
+# hyprland stuff
             hyprpaper
             libnotify
             mako
+            hyprlock
+            bemenu
+            pavucontrol
+            pamixer
+            xdg-desktop-portal-hyprland
+            brightnessctl
+            hypridle
 
 # # You can also create simple shell scripts directly inside your
 # # configuration. For example, this adds a command 'my-hello' to your
@@ -122,12 +131,12 @@ in
                 modules-center = ["hyprland/window"];
                 modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock"];
                 "hyprland/workspaces" = {
-                    format = "<sub>{icon}</sub>\n{windows}";
-                    format-window-separator = "\n";
+                    format = "<sup>{icon}</sup> {windows}";
+                    format-window-separator = " ";
                     window-rewrite-default = "";
                     window-rewrite = {
-                        "title<.*youtube.*>" = "";
-                        "title<.*github.*>" = "";
+                        "title<.*YouTube.*>" = "";
+                        "title<.*GitHub.*>" = "";
                         "title<.*Vivaldi" = "";
                         "title<.*vim.*>" = "";
                         "wezterm" = "";
@@ -160,8 +169,9 @@ in
                 battery = {
                     bat = "BAT0";
                     states = {
-                        good = 95;
-                        warning = 30;
+                        full = 100;
+                        good = 90;
+                        warning = 35;
                         critical = 15;
                     };
                     format = "{capacity}% {icon}";
@@ -188,7 +198,8 @@ in
                         car = "";
                         default = ["" ""];
                     };
-                    on-click = "pavucontrol";
+                    on-click = "pamixer -t";
+                    on-click-right = "pavucontrol";
                 };
             };
 
@@ -200,7 +211,7 @@ in
             monitor = ",preferred,auto,auto";
 
 # launch apps on startup
-            exec-once = "waybar & hyprpaper & mako";
+            exec-once = "waybar & hyprpaper & mako & hypridle";
 
 # default apps
             "$terminal" = "wezterm";
@@ -298,6 +309,7 @@ in
                     "$mainMod, V, togglefloating, "
                     "$mainMod, R, exec, $menu"
                     "$mainMod, B, exec, $browser"
+                    "$mainMod SHIFT, L, exec, hyprlock"
 #dwindle
                     "$mainMod, P, pseudo,"
                     "$mainMod, space, togglesplit,"
@@ -335,6 +347,20 @@ in
                     "$mainMod, mouse_down, workspace, e+1"
                     "$mainMod, mouse_up, workspace, e-1"
                     ];
+            bindle = [
+# Volume up/down
+                    ", XF86AudioRaiseVolume, exec, pamixer -i 5"
+                    ", XF86AudioLowerVolume, exec, pamixer -d 5"
+                    ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
+                    ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+            ];
+            bindl = [
+# Volume mute
+                    ", XF86AudioMute, exec, pamixer -t"
+# Tablet mode switch
+                    ", switch:on:[Tablet Mode Switch], exec, notify-send bruh"
+                    ", switch:off:[Tablet Mode Switch], exec, notify-send bruh"
+            ];
             bindm = [
 # Move/resize windows with mainMod + LMB/RMB and dragging
                 "$mainMod, mouse:272, movewindow"
@@ -369,10 +395,13 @@ in
             source = dotfileDirectory+"/.tmux";
         };
         ".config/waybar/style.css".source = dotfileDirectory+"/.config/waybar/style.css";
+        ".config/hypr/hyprlock.conf".source = dotfileDirectory+"/.config/hypr/hyprlock.conf";
+        ".config/hypr/hypridle.conf".source = dotfileDirectory+"/.config/hypr/hypridle.conf";
+        ".config/mako/config".source = dotfileDirectory+"/.config/mako/config";
     };
-# Home Manager can also manage your environment variables through
-# 'home.sessionVariables'. If you don't want to manage your shell through Home
-# Manager then you have to manually source 'hm-session-vars.sh' located at
+# home manager can also manage your environment variables through
+# 'home.sessionvariables'. if you don't want to manage your shell through home
+# manager then you have to manually source 'hm-session-vars.sh' located at
 # either
 #
 #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
@@ -386,7 +415,7 @@ in
 #  /etc/profiles/per-user/xtremejames1/etc/profile.d/hm-session-vars.sh
 #
     home.sessionVariables = {
-        EDITOR = "neovim";
+        editor = "neovim";
     };
 
 #    programs.git = {

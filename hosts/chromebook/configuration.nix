@@ -48,9 +48,11 @@ in
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.displayManager.sddm = {
+    package = pkgs.kdePackages.sddm;
+    enable = true;
+    theme = "catppuccin-mocha";
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -91,19 +93,25 @@ in
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    audio.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
-    #media-session.enable = true;
+    # media-session.enable = true;
   };
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
+
+
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.xtremejames1 = {
@@ -119,8 +127,6 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes"];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   nixpkgs.config.allowUnfree = true;
 
   environment.plasma5.excludePackages = with pkgs.plasma5Packages; [
@@ -142,11 +148,18 @@ in
     syncthing
     krita
     fastfetch
-    bemenu
-
-
-    (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
+    wireplumber
+    unstable.catppuccin-sddm
+    # (unstable.catppuccin-sddm.override {
+    #   flavor = "mocha";
+    #   font = "Aptos Bold";
+    # })
   ];
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
+  ];
+
+
 
   # home manager setup
   home-manager = {
