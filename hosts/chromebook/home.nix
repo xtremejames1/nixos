@@ -42,6 +42,8 @@ in
             bottom
             gping
             neovim
+            wezterm
+            kitty
 
 # hyprland stuff
             hyprpaper
@@ -54,6 +56,14 @@ in
             xdg-desktop-portal-hyprland
             brightnessctl
             hypridle
+            pcmanfm
+            yazi
+            anyrun
+            swayosd
+            satty
+            ianny
+            anyrun
+
 
 # # You can also create simple shell scripts directly inside your
 # # configuration. For example, this adds a command 'my-hello' to your
@@ -119,7 +129,6 @@ in
         };
     };
 
-
     programs.waybar = {
         enable = true;
         settings = {
@@ -132,7 +141,7 @@ in
                 modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock"];
                 "hyprland/workspaces" = {
                     format = "<sup>{icon}</sup> {windows}";
-                    format-window-separator = " ";
+                    format-window-separator = "  ";
                     window-rewrite-default = "";
                     window-rewrite = {
                         "title<.*YouTube.*>" = "";
@@ -208,14 +217,14 @@ in
     wayland.windowManager.hyprland = {
         enable = true;
         settings = {
-            monitor = ",preferred,auto,auto";
+            monitor = "eDP-1,preferred,auto,auto,transform,0";
 
 # launch apps on startup
-            exec-once = "waybar & hyprpaper & mako & hypridle";
+            exec-once = "waybar & hyprpaper & mako & hypridle & iio-hyprland eDP-1";
 
 # default apps
             "$terminal" = "wezterm";
-            "$fileManager" = "dolphin";
+            "$fileManager" = "wezterm start -- yazi";
             "$menu" = "bemenu-run --binding vim";
             "$browser" = "vivaldi";
 
@@ -310,14 +319,15 @@ in
                     "$mainMod, R, exec, $menu"
                     "$mainMod, B, exec, $browser"
                     "$mainMod SHIFT, L, exec, hyprlock"
+                    "ALT, Space, exec, anyrun"
 #dwindle
                     "$mainMod, P, pseudo,"
                     "$mainMod, space, togglesplit,"
 # Move focus with mainMod + arrow keys
-                    "$mainMod, h, movefocus, l"
-                    "$mainMod, l, movefocus, r"
-                    "$mainMod, k, movefocus, u"
-                    "$mainMod, j, movefocus, d"
+                    "$mainMod, H, movefocus, l"
+                    "$mainMod, L, movefocus, r"
+                    "$mainMod, K, movefocus, u"
+                    "$mainMod, J, movefocus, d"
 # Switch workspaces with mainMod + [0-9]
                     "$mainMod, 1, workspace, 1"
                     "$mainMod, 2, workspace, 2"
@@ -398,6 +408,14 @@ in
         ".config/hypr/hyprlock.conf".source = dotfileDirectory+"/.config/hypr/hyprlock.conf";
         ".config/hypr/hypridle.conf".source = dotfileDirectory+"/.config/hypr/hypridle.conf";
         ".config/mako/config".source = dotfileDirectory+"/.config/mako/config";
+        ".config/anyrun" = {
+            recursive = true;
+            source = dotfileDirectory+"/.config/anyrun";
+        };
+        ".config/yazi" = {
+            recursive = true;
+            source = dotfileDirectory+"/.config/yazi";
+        };
     };
 # home manager can also manage your environment variables through
 # 'home.sessionvariables'. if you don't want to manage your shell through home

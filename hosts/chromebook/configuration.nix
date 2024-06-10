@@ -46,12 +46,13 @@ in
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 
-  services.xserver.displayManager.sddm = {
+  services.displayManager.sddm = {
     package = pkgs.kdePackages.sddm;
     enable = true;
     theme = "catppuccin-mocha";
+    wayland.enable = true;
   };
 
   # Configure keymap in X11
@@ -111,7 +112,10 @@ in
 
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  services.libinput.enable = true;
+
+  # Accelerometer sensor stuff
+  hardware.sensor.iio.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.xtremejames1 = {
@@ -128,38 +132,40 @@ in
   nix.settings.experimental-features = [ "nix-command" "flakes"];
 
   nixpkgs.config.allowUnfree = true;
-
-  environment.plasma5.excludePackages = with pkgs.plasma5Packages; [
-    oxygen
-    konsole
-    plasma-browser-integration
-  ];
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    wezterm
     vivaldi
     vivaldi-ffmpeg-codecs
     widevine-cdm
-    obsidian
     gcc
-    vlc
     lua-language-server
     syncthing
     krita
     fastfetch
     wireplumber
-    unstable.catppuccin-sddm
-    # (unstable.catppuccin-sddm.override {
-    #   flavor = "mocha";
-    #   font = "Aptos Bold";
-    # })
+    sioyek
+    iio-sensor-proxy
+    inputs.iio-hyprland.packages.${pkgs.system}.default
+
+    # catppuccin-sddm
+    catppuccin-sddm
+    (unstable.catppuccin-sddm.override {
+      flavor = "mocha";
+      font = "Aptos Bold";
+    })
   ];
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
   ];
 
-
+environment.etc."current-system-packages".text =
+  let
+    packages = builtins.map (p: "${p.name}") config.environment.systemPackages;
+    sortedUnique = builtins.sort builtins.lessThan (pkgs.lib.lists.unique packages);
+    formatted = builtins.concatStringsSep "\n" sortedUnique;
+  in
+    formatted;
 
   # home manager setup
   home-manager = {
