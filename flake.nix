@@ -14,6 +14,7 @@
     };
 
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
+
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
