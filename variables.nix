@@ -1,8 +1,11 @@
-{ config, lib, ... }:
+{ lib, ... }:
+with lib;
 {
-  options.variables = lib.mkOption {
-    type = lib.types.attrs;
-    default = { };
+  options.dotfiles = {
+    directory = mkOption {
+      type = types.path;
+      default = ./dotfiles;
+      description = "directory for dotfiles";
+    };
   };
-  config._module.args.variables = config.variables;
 }

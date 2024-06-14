@@ -1,11 +1,11 @@
 { config, pkgs, inputs, lib, ... }:
 
-let dotfileDirectory = ./../../dotfiles;
-in
 {
     imports = [
         ./../../modules/hyprland.nix
+        ./../../variables.nix
     ];
+
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
 # This value determines the Home Manager release that your configuration is
@@ -116,28 +116,16 @@ in
 # plain files is through 'home.file'.
 
     home.file = {
-        ".p10k.zsh".source = dotfileDirectory+"/.p10k.zsh";
-        ".wezterm.lua".source = dotfileDirectory+"/.wezterm.lua";
+        ".p10k.zsh".source = config.dotfiles.directory+"/.p10k.zsh";
+        ".wezterm.lua".source = config.dotfiles.directory+"/.wezterm.lua";
         ".config/nvim" = {
             recursive = true;
-            source = dotfileDirectory+"/.config/nvim";
+            source = config.dotfiles.directory+"/.config/nvim";
         };
-        ".tmux.conf".source = dotfileDirectory+"/.tmux.conf";
+        ".tmux.conf".source = config.dotfiles.directory+"/.tmux.conf";
         ".tmux" = {
             recursive = true;
-            source = dotfileDirectory+"/.tmux";
-        };
-        ".config/waybar/style.css".source = dotfileDirectory+"/.config/waybar/style.css";
-        ".config/hypr/hyprlock.conf".source = dotfileDirectory+"/.config/hypr/hyprlock.conf";
-        ".config/hypr/hypridle.conf".source = dotfileDirectory+"/.config/hypr/hypridle.conf";
-        ".config/mako/config".source = dotfileDirectory+"/.config/mako/config";
-        ".config/anyrun" = {
-            recursive = true;
-            source = dotfileDirectory+"/.config/anyrun";
-        };
-        ".config/yazi" = {
-            recursive = true;
-            source = dotfileDirectory+"/.config/yazi";
+            source = config.dotfiles.directory+"/.tmux";
         };
     };
 # home manager can also manage your environment variables through

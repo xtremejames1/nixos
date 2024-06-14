@@ -1,6 +1,5 @@
-{ inputs, pkgs, ...}:
+{ inputs, pkgs, config, ...}:
 {
-  # imports = [ inputs.hyprland.homeManagerModules.default ];
   home.packages = with pkgs; [
     hyprpaper
       libnotify
@@ -19,8 +18,27 @@
       satty
       ianny
       anyrun
-
+      satty
+      ianny
+      swaynotificationcenter
   ];
+
+  home.file = {
+        ".config/waybar/style.css".source = config.dotfiles.directory+"/.config/waybar/style.css";
+        ".config/hypr/hyprlock.conf".source = config.dotfiles.directory+"/.config/hypr/hyprlock.conf";
+        ".config/hypr/hypridle.conf".source = config.dotfiles.directory+"/.config/hypr/hypridle.conf";
+        ".config/mako/config".source = config.dotfiles.directory+"/.config/mako/config";
+        ".config/anyrun" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/anyrun";
+        };
+        ".config/yazi" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/yazi";
+        };
+  };
+
+  services.swayosd.enable = true;
 
   programs.waybar = {
     enable = true;
@@ -143,7 +161,7 @@
 
       general = {
         gaps_in = "2";
-        gaps_out = "8";
+        gaps_out = "6";
         border_size = "1";
         "col.active_border" = "rgba(7a6a33ee) rgba(faffa3ee) 45deg";
         "col.inactive_border" = "rgba(595959aa)";

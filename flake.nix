@@ -15,7 +15,12 @@
 
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
-  };
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprgrass = {
+      url = "github:horriblename/hyprgrass";
+      inputs.hyprland.follows = "hyprland"; # IMPORTANT
+    };
+ };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   let 
@@ -59,4 +64,4 @@
       };
     };
   };
-}
+  }
