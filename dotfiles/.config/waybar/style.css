@@ -102,3 +102,6 @@ window#waybar {
 #tray {
 }
 
+#custom-notification {
+  font-family: "NotoSansMono Nerd Font";
+}

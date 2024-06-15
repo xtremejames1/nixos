@@ -144,9 +144,10 @@ in
     krita
     fastfetch
     wireplumber
+
     sioyek
-    iio-sensor-proxy
-    inputs.iio-hyprland.packages.${pkgs.system}.default
+    zathura
+
 
     # catppuccin-sddm
     catppuccin-sddm

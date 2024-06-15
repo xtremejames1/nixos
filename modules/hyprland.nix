@@ -3,7 +3,6 @@
   home.packages = with pkgs; [
     hyprpaper
       libnotify
-      mako
       hyprlock
       bemenu
       pavucontrol
@@ -14,117 +13,19 @@
       pcmanfm
       yazi
       anyrun
-      swayosd
       satty
       ianny
       anyrun
-      satty
       ianny
-      swaynotificationcenter
+    iio-sensor-proxy
+    inputs.iio-hyprland.packages.${pkgs.system}.default
+
+#screenshot
+      satty
+      grim
+      slurp
   ];
 
-  home.file = {
-        ".config/waybar/style.css".source = config.dotfiles.directory+"/.config/waybar/style.css";
-        ".config/hypr/hyprlock.conf".source = config.dotfiles.directory+"/.config/hypr/hyprlock.conf";
-        ".config/hypr/hypridle.conf".source = config.dotfiles.directory+"/.config/hypr/hypridle.conf";
-        ".config/mako/config".source = config.dotfiles.directory+"/.config/mako/config";
-        ".config/anyrun" = {
-            recursive = true;
-            source = config.dotfiles.directory+"/.config/anyrun";
-        };
-        ".config/yazi" = {
-            recursive = true;
-            source = config.dotfiles.directory+"/.config/yazi";
-        };
-  };
-
-  services.swayosd.enable = true;
-
-  programs.waybar = {
-    enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "top";
-        height = 24;
-        modules-left = ["hyprland/workspaces"];
-        modules-center = ["hyprland/window"];
-        modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock"];
-        "hyprland/workspaces" = {
-          format = "<sup>{icon}</sup> {windows}";
-          format-window-separator = "  ";
-          window-rewrite-default = "";
-          window-rewrite = {
-            "title<.*YouTube.*>" = "";
-            "title<.*GitHub.*>" = "";
-            "title<.*Vivaldi" = "";
-            "title<.*vim.*>" = "";
-            "wezterm" = "";
-          };
-        };
-        tray = {
-          icon-size = 21;
-          spacing = 10;
-        };
-        clock = {
-          format-alt = "{:%Y-%m-%d}";
-        };
-        cpu = {
-          format = "{usage}% ";
-        };
-        memory = {
-          format = "{}% ";
-        };
-        power-profiles-daemon = {
-          format = "{icon}";
-          tooltip-format = "Power profile: {profile}\nDriver: {driver}";
-          tooltip = true;
-          format-icons = {
-            default = "";
-            performance = "";
-            balanced = "";
-            power-saver = "";
-          };
-        };
-        battery = {
-          bat = "BAT0";
-          states = {
-            full = 100;
-            good = 90;
-            warning = 35;
-            critical = 15;
-          };
-          format = "{capacity}% {icon}";
-# // "format-good": ""; // An empty format will hide the module
-# // "format-full": "";
-          format-icons = ["" "" "" "" ""];
-        };
-        network = {
-# interface = "wlp2s0";
-          format-wifi = "{essid} ({signalStrength}%) ";
-          format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
-          format-disconnected = "Disconnected ⚠";
-        };
-        pulseaudio = {
-          format = "{volume}% {icon}";
-          format-bluetooth = "{volume}% {icon}";
-          format-muted = "";
-          format-icons = {
-            headphones = "";
-            handsfree = "";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
-            default = ["" ""];
-          };
-          on-click = "pamixer -t";
-          on-click-right = "pavucontrol";
-        };
-      };
-
-    };
-  };
   wayland.windowManager.hyprland = {
     enable = true;
     plugins = [
@@ -133,7 +34,7 @@
       monitor = "eDP-1,preferred,auto,auto,transform,0";
 
 # launch apps on startup
-      exec-once = "waybar & hyprpaper & mako & hypridle & iio-hyprland eDP-1";
+      exec-once = "waybar & hyprpaper & swaync & hypridle & iio-hyprland eDP-1";
 
 # default apps
       "$terminal" = "wezterm";
@@ -233,6 +134,9 @@
           "$mainMod, B, exec, $browser"
           "$mainMod SHIFT, L, exec, hyprlock"
           "ALT, Space, exec, anyrun"
+          "$mainMod SHIFT, P, exec, screenshot"
+          "ALT SHIFT, 5, exec, screenshot"
+          "$mainMod SHIFT, N, exec, swaync-client -t -sw"
 #dwindle
           "$mainMod, P, pseudo,"
           "$mainMod, space, togglesplit,"
@@ -300,5 +204,480 @@
 # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
       windowrulev2 = suppressevent maximize, class:.* # You'll probably like this.
                                                         '';
+  };
+
+  home.file = {
+        ".config/waybar/style.css".source = config.dotfiles.directory+"/.config/waybar/style.css";
+        ".config/hypr/hyprlock.conf".source = config.dotfiles.directory+"/.config/hypr/hyprlock.conf";
+        ".config/hypr/hypridle.conf".source = config.dotfiles.directory+"/.config/hypr/hypridle.conf";
+        ".config/mako/config".source = config.dotfiles.directory+"/.config/mako/config";
+        ".config/anyrun" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/anyrun";
+        };
+        ".config/yazi" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/yazi";
+        };
+  };
+
+  programs.waybar = {
+    enable = true;
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 24;
+        modules-left = ["hyprland/workspaces"];
+        modules-center = ["hyprland/window"];
+        modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock" "custom/notifications"];
+        "hyprland/workspaces" = {
+          format = "<sup>{icon}</sup> {windows}";
+          format-window-separator = "  ";
+          window-rewrite-default = "";
+          window-rewrite = {
+            "title<.*YouTube.*>" = "";
+            "title<.*GitHub.*>" = "";
+            "title<.*Vivaldi" = "";
+            "title<.*vim.*>" = "";
+            "wezterm" = "";
+          };
+        };
+        tray = {
+          icon-size = 21;
+          spacing = 10;
+        };
+        clock = {
+          format-alt = "{:%Y-%m-%d}";
+        };
+        cpu = {
+          format = "{usage}% ";
+        };
+        memory = {
+          format = "{}% ";
+        };
+        power-profiles-daemon = {
+          format = "{icon}";
+          tooltip-format = "Power profile: {profile}\nDriver: {driver}";
+          tooltip = true;
+          format-icons = {
+            default = "";
+            performance = "";
+            balanced = "";
+            power-saver = "";
+          };
+        };
+        battery = {
+          bat = "BAT0";
+          states = {
+            full = 100;
+            good = 90;
+            warning = 35;
+            critical = 15;
+          };
+          format = "{capacity}% {icon}";
+# // "format-good": ""; // An empty format will hide the module
+# // "format-full": "";
+          format-icons = ["" "" "" "" ""];
+        };
+        network = {
+# interface = "wlp2s0";
+          format-wifi = "{essid} ({signalStrength}%) ";
+          format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
+          format-disconnected = "Disconnected ⚠";
+        };
+        pulseaudio = {
+          format = "{volume}% {icon}";
+          format-bluetooth = "{volume}% {icon}";
+          format-muted = "";
+          format-icons = {
+            headphones = "";
+            handsfree = "";
+            headset = "";
+            phone = "";
+            portable = "";
+            car = "";
+            default = ["" ""];
+          };
+          on-click = "pamixer -t";
+          on-click-right = "pavucontrol";
+        };
+      };
+      "custom/notification" = {
+        "tooltip" = false;
+        format = "{icon}";
+        format-icons = {
+          notification = "<span foreground='red'><sup></sup></span>";
+          none = "";
+          dnd-notification = "<span foreground='red'><sup></sup></span>";
+          dnd-none = "";
+          inhibited-notification = "<span foreground='red'><sup></sup></span>";
+          inhibited-none = "";
+          dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+          dnd-inhibited-none = "";
+        };
+        return-type = "json";
+        exec-if = "which swaync-client";
+        exec = "swaync-client -swb";
+        on-click = "swaync-client -t -sw";
+        on-click-right = "swaync-client -d -sw";
+        escape = true;
+      };
+    };
+  };
+
+#SWAY NOTIFICTAION CENTER
+  services.swaync = {
+    enable = true;
+    settings = {
+      notification-icon-size = 32;
+      notification-body-image-height = 100;
+      notification-body-image-width = 200;
+      notification-window-width = 380;
+    };
+    style = ''
+* {
+  all: unset;
+  font-size: 14px;
+  font-family: "Ubuntu Nerd Font";
+  transition: 200ms;
+}
+
+trough highlight {
+  background: #cdd6f4;
+}
+
+scale trough {
+  margin: 0rem 1rem;
+  background-color: #313244;
+  min-height: 8px;
+  min-width: 70px;
+}
+
+slider {
+  background-color: #89b4fa;
+}
+
+.floating-notifications.background .notification-row .notification-background {
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), inset 0 0 0 1px #313244;
+  border-radius: 12.6px;
+  margin: 18px;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  padding: 0;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification {
+  padding: 7px;
+  border-radius: 12.6px;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification.critical {
+  box-shadow: inset 0 0 7px 0 #f38ba8;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification .notification-content {
+  margin: 7px;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification .notification-content .summary {
+  color: #cdd6f4;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification .notification-content .time {
+  color: #a6adc8;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification .notification-content .body {
+  color: #cdd6f4;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification > *:last-child > * {
+  min-height: 3.4em;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action {
+  border-radius: 7px;
+  color: #cdd6f4;
+  background-color: #313244;
+  box-shadow: inset 0 0 0 1px #45475a;
+  margin: 7px;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+.floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #74c7ec;
+  color: #cdd6f4;
+}
+
+.floating-notifications.background .notification-row .notification-background .close-button {
+  margin: 7px;
+  padding: 2px;
+  border-radius: 6.3px;
+  color: #1e1e2e;
+  background-color: #f38ba8;
+}
+
+.floating-notifications.background .notification-row .notification-background .close-button:hover {
+  background-color: #eba0ac;
+  color: #1e1e2e;
+}
+
+.floating-notifications.background .notification-row .notification-background .close-button:active {
+  background-color: #f38ba8;
+  color: #1e1e2e;
+}
+
+.control-center {
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), inset 0 0 0 1px #313244;
+  border-radius: 12.6px;
+  margin: 18px;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  padding: 14px;
+}
+
+.control-center .widget-title > label {
+  color: #cdd6f4;
+  font-size: 1.3em;
+}
+
+.control-center .widget-title button {
+  border-radius: 7px;
+  color: #cdd6f4;
+  background-color: #313244;
+  box-shadow: inset 0 0 0 1px #45475a;
+  padding: 8px;
+}
+
+.control-center .widget-title button:hover {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #585b70;
+  color: #cdd6f4;
+}
+
+.control-center .widget-title button:active {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #74c7ec;
+  color: #1e1e2e;
+}
+
+.control-center .notification-row .notification-background {
+  border-radius: 7px;
+  color: #cdd6f4;
+  background-color: #313244;
+  box-shadow: inset 0 0 0 1px #45475a;
+  margin-top: 14px;
+}
+
+.control-center .notification-row .notification-background .notification {
+  padding: 7px;
+  border-radius: 7px;
+}
+
+.control-center .notification-row .notification-background .notification.critical {
+  box-shadow: inset 0 0 7px 0 #f38ba8;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content {
+  margin: 7px;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content .summary {
+  color: #cdd6f4;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content .time {
+  color: #a6adc8;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content .body {
+  color: #cdd6f4;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * {
+  min-height: 3.4em;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * .notification-action {
+  border-radius: 7px;
+  color: #cdd6f4;
+  background-color: #11111b;
+  box-shadow: inset 0 0 0 1px #45475a;
+  margin: 7px;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+.control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #74c7ec;
+  color: #cdd6f4;
+}
+
+.control-center .notification-row .notification-background .close-button {
+  margin: 7px;
+  padding: 2px;
+  border-radius: 6.3px;
+  color: #1e1e2e;
+  background-color: #eba0ac;
+}
+
+.close-button {
+  border-radius: 6.3px;
+}
+
+.control-center .notification-row .notification-background .close-button:hover {
+  background-color: #f38ba8;
+  color: #1e1e2e;
+}
+
+.control-center .notification-row .notification-background .close-button:active {
+  background-color: #f38ba8;
+  color: #1e1e2e;
+}
+
+.control-center .notification-row .notification-background:hover {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #7f849c;
+  color: #cdd6f4;
+}
+
+.control-center .notification-row .notification-background:active {
+  box-shadow: inset 0 0 0 1px #45475a;
+  background-color: #74c7ec;
+  color: #cdd6f4;
+}
+
+.notification.critical progress {
+  background-color: #f38ba8;
+}
+
+.notification.low progress,
+.notification.normal progress {
+  background-color: #89b4fa;
+}
+
+.control-center-dnd {
+  margin-top: 5px;
+  border-radius: 8px;
+  background: #313244;
+  border: 1px solid #45475a;
+  box-shadow: none;
+}
+
+.control-center-dnd:checked {
+  background: #313244;
+}
+
+.control-center-dnd slider {
+  background: #45475a;
+  border-radius: 8px;
+}
+
+.widget-dnd {
+  margin: 0px;
+  font-size: 1.1rem;
+}
+
+.widget-dnd > switch {
+  font-size: initial;
+  border-radius: 8px;
+  background: #313244;
+  border: 1px solid #45475a;
+  box-shadow: none;
+}
+
+.widget-dnd > switch:checked {
+  background: #313244;
+}
+
+.widget-dnd > switch slider {
+  background: #45475a;
+  border-radius: 8px;
+  border: 1px solid #6c7086;
+}
+
+.widget-mpris .widget-mpris-player {
+  background: #313244;
+  padding: 7px;
+}
+
+.widget-mpris .widget-mpris-title {
+  font-size: 1.2rem;
+}
+
+.widget-mpris .widget-mpris-subtitle {
+  font-size: 0.8rem;
+}
+
+.widget-menubar > box > .menu-button-bar > button > label {
+  font-size: 3rem;
+  padding: 0.5rem 2rem;
+}
+
+.widget-menubar > box > .menu-button-bar > :last-child {
+  color: #f38ba8;
+}
+
+.power-buttons button:hover,
+.powermode-buttons button:hover,
+.screenshot-buttons button:hover {
+  background: #313244;
+}
+
+.control-center .widget-label > label {
+  color: #cdd6f4;
+  font-size: 2rem;
+}
+
+.widget-buttons-grid {
+  padding-top: 1rem;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button label {
+  font-size: 2.5rem;
+}
+
+.widget-volume {
+  padding-top: 1rem;
+}
+
+.widget-volume label {
+  font-size: 1.5rem;
+  color: #74c7ec;
+}
+
+.widget-volume trough highlight {
+  background: #74c7ec;
+}
+
+.widget-backlight trough highlight {
+  background: #f9e2af;
+}
+
+.widget-backlight label {
+  font-size: 1.5rem;
+  color: #f9e2af;
+}
+
+.widget-backlight .KB {
+  padding-bottom: 1rem;
+}
+
+.image {
+  padding-right: 0.5rem;
+}
+    '';
   };
 }
