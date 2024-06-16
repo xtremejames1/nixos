@@ -4,6 +4,7 @@
     imports = [
         ./../../modules/hyprland.nix
         ./../../modules/terminal.nix
+        ./../../modules/music.nix
         ./../../variables.nix
     ];
 

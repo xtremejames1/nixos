@@ -45,9 +45,6 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
   services.displayManager.sddm = {
     package = pkgs.kdePackages.sddm;
     enable = true;
@@ -64,29 +61,29 @@ in
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # keybinds
-  services.interception-tools =
-    let
-      dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
-        MAPPINGS:
-          - KEY: KEY_CAPSLOCK
-            TAP: KEY_ESC
-            HOLD: KEY_LEFTCTRL
-      '';
-    in
-    {
+  services = {
+    syncthing = {
       enable = true;
-      plugins = lib.mkForce [
-        pkgs.interception-tools-plugins.dual-function-keys
-      ];
-      udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-          DEVICE:
-            NAME: "USB Keyboard"
-            EVENTS:
-              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
-      '';
+      user = "xtremejames1";
+      dataDir = "/home/xtremejames1/Documents";    # Default folder for new synced folders
+      overrideDevices = true;     # overrides any devices added or deleted through the WebUI
+      overrideFolders = true;     # overrides any folders added or deleted through the WebUI
+      settings = {
+        devices = {
+          "xtremephone1" = { id = "OTA4OPK-FHGM4YC-M3HE7G5-OLDM5AS-RAVN7CU-ZR3DLOH-R3KRKRE-R254UQN"; };
+          "xtremecomputer1" = { id = "B5LVKBB-VEA4UZU-WZ6LRKX-3ZUH7J7-BFXR4I7-TUPTP2M-QEJGN5M-MF522QI"; };
+          "xtremelaptop2" = { id = "7TZCVZS-YLJ62OU-EAT7NBH-KZIPLFN-R5TCEPW-X2YAO3U-YSUH5YW-B44JYQ4"; };
+        };
+        folders = {
+          "5excn-sxe5v" = {         # Name of folder in Syncthing, also the folder ID
+            path = "/home/xtremejames1/Documents/ObsidianVault/";    # Which folder to add to Syncthing
+              devices = [ "xtremephone1" "xtremecomputer1" "xtremelaptop2" ];      # Which devices to share the folder with
+          };
+        };
+      };
     };
+  };
+
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -144,9 +141,17 @@ in
     krita
     fastfetch
     wireplumber
+    obsidian
+    syncthing
 
+#media viewing
     sioyek
     zathura
+    
+    kdePackages.elisa
+    imv
+
+    mpv
 
 
     # catppuccin-sddm
@@ -159,6 +164,16 @@ in
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
   ];
+
+  services.tlp = {
+    enable = true;
+    settings = {
+      WIFI_PWR_ON_BAT = 1;
+      USB_AUTOSUSPEND=1;
+    };
+  };
+  
+  powerManagement.powertop.enable = true;
 
 environment.etc."current-system-packages".text =
   let

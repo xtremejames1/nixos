@@ -2,21 +2,23 @@
 {
   home.packages = with pkgs; [
     hyprpaper
-      libnotify
-      hyprlock
-      bemenu
-      pavucontrol
-      pamixer
-      xdg-desktop-portal-hyprland
-      brightnessctl
-      hypridle
-      pcmanfm
-      yazi
-      anyrun
-      satty
-      ianny
-      anyrun
-      ianny
+    libnotify
+    hyprlock
+    bemenu
+
+    #volume control
+    pavucontrol
+    pamixer
+
+    wl-clipboard
+    xdg-desktop-portal-hyprland
+    brightnessctl
+    hypridle
+    yazi
+    anyrun
+    ianny
+
+#screen rotation
     iio-sensor-proxy
     inputs.iio-hyprland.packages.${pkgs.system}.default
 
@@ -34,7 +36,7 @@
       monitor = "eDP-1,preferred,auto,auto,transform,0";
 
 # launch apps on startup
-      exec-once = "waybar & hyprpaper & swaync & hypridle & iio-hyprland eDP-1";
+      exec-once = "waybar & hyprpaper & swaync & hypridle & iio-hyprland eDP-1 & ianny";
 
 # default apps
       "$terminal" = "wezterm";
