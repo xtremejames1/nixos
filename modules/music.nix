@@ -1,11 +1,14 @@
 { inputs, pkgs, config, ... }:
 {
 	home.packages = with pkgs; [
-		# mpd
+# mpd
 	];
 	programs.ncmpcpp = {
 		enable = true;
-		
+		bindings = [
+			{key = "j"; command = "scroll_down"; }
+			{key = "k"; command = "scroll_up"; }
+		];
 	};
 	services.mpd = {
 		enable = true;
@@ -18,7 +21,7 @@
 		extraConfig = ''
 			audio_output {
 				type "pipewire"
-				name "My Pipewire" # this can be whatever you want
+					name "My Pipewire" # this can be whatever you want
 			}
 		'';
 	};

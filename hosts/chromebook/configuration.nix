@@ -143,6 +143,7 @@ in
     wireplumber
     obsidian
     syncthing
+    gnupg
 
 #media viewing
     sioyek

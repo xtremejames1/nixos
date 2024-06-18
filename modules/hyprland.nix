@@ -243,6 +243,7 @@
             "title<.*Vivaldi" = "";
             "title<.*vim.*>" = "";
             "wezterm" = "";
+            "obsidian" = "󰠮";
           };
         };
         tray = {
@@ -294,8 +295,8 @@
           format-muted = "";
           format-icons = {
             headphones = "";
-            handsfree = "";
-            headset = "";
+            handsfree = "󰋎";
+            headset = "󰋎";
             phone = "";
             portable = "";
             car = "";
