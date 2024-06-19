@@ -1,12 +1,10 @@
-{ inputs, pkgs, config, ...}:
+{ pkgs, ...}:
 {
   home.packages = with pkgs; [
         eza
         zoxide
         ripgrep
         atuin
-        lazygit
-        gh
         bat
         fzf
         fd

@@ -17,7 +17,7 @@
             vim = "nvim";
             grep = "rg";
             cat = "bat";
-            rb = "~/nixos/rebuildChromebook.sh";
+            rb = "~/nixos/rebuild.sh";
             du = "dust";
             df = "duf";
             vimhome = "nvim ~/nixos/hosts/chromebook/home.nix";

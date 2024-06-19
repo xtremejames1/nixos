@@ -1,4 +1,7 @@
-{ inputs, pkgs, config, ...}:
+{ inputs, pkgs, config, lib, ...}:
+let
+host = config.host.name;
+in
 {
   home.packages = with pkgs; [
     hyprpaper
@@ -33,7 +36,8 @@
     plugins = [
     ];
     settings = {
-      monitor = "eDP-1,preferred,auto,auto,transform,0";
+      monitor = if (host == "xtremecomputer1") then ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"] else ["eDP-1,preferred,auto,auto,transform,0"];
+      # monitor = lib.mkIf (config.host.name == "xtremecomputer1") ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"];
 
 # launch apps on startup
       exec-once = "waybar & hyprpaper & swaync & hypridle & iio-hyprland eDP-1 & ianny";
@@ -221,6 +225,7 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/yazi";
         };
+        ".TEST".text = config.host.name;
   };
 
   programs.waybar = {

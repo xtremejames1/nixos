@@ -8,4 +8,11 @@ with lib;
       description = "directory for dotfiles";
     };
   };
+  options.host = {
+    name = mkOption {
+      type = types.str;
+      default = "xtremecomputer1";
+      description = "hostname";
+    };
+  };
 }

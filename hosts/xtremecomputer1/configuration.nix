@@ -11,15 +11,19 @@ in
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./../../variables.nix
       inputs.home-manager.nixosModules.default
     ];
+    host.name = "xtreme";
 
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "xtremecomputer2"; # Define your hostname.
+  
+
+  networking.hostName = "xtremecomputer1"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -51,7 +55,7 @@ in
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
+  services.displayManager.sddm.enable = true;
   services.xserver.desktopManager.plasma5.enable = true;
 
   services.xrdp.enable = true;
@@ -174,12 +178,40 @@ in
   environment.systemPackages = with pkgs; [
     vim
     wget
-    wezterm
     unstable.caligula
     inkscape
+    poppler_utils
+    vivaldi
+    vivaldi-ffmpeg-codecs
+    widevine-cdm
+    discord
+    obsidian
+    gcc
+    xcape
+    interception-tools
+    nodejs_22
+    sqlite
+    obs-studio
+    cmake
+    lollypop
+    vlc
+    subversion
+    python3
+    gdown
+    steam
+    lutris
+    bottles
+    git-interactive-rebase-tool
+    lua-language-server
+    wineWowPackages.stable
+    syncthing
+
+    (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
+
   ];
 
   programs.zsh.enable = true;
+  programs.hyprland.enable = true;
 
   home-manager = {
     extraSpecialArgs = {

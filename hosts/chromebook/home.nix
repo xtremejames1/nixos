@@ -1,15 +1,18 @@
 { config, pkgs, inputs, lib, ... }:
 
 {
+    lib.host.name = "jxchromenix";
     imports = [
         ./../../modules/hyprland.nix
         ./../../modules/terminal.nix
+        ./../../modules/git.nix
         ./../../modules/music.nix
         ./../../variables.nix
     ];
 
     home.username = "xtremejames1";
     home.homeDirectory = "/home/xtremejames1";
+
 # This value determines the Home Manager release that your configuration is
 # compatible with. This helps avoid breakage when a new Home Manager release
 # introduces backwards incompatible changes.
@@ -66,13 +69,9 @@
 #
     home.sessionVariables = {
         editor = "neovim";
+        NIXHOST = "chromebook";
     };
 
-   programs.git = {
-       enable = true;
-       userName  = "James Xiao";
-       userEmail = "xtremejames1@gmail.com";
-   };
 
 # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
