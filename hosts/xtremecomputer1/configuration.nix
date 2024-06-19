@@ -14,7 +14,6 @@ in
       ./../../variables.nix
       inputs.home-manager.nixosModules.default
     ];
-    host.name = "xtreme";
 
   # Bootloader.
   boot.loader.grub.enable = true;

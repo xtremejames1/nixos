@@ -1,6 +1,5 @@
 { config, pkgs, inputs, lib, ... }:
 {
-    lib.host.name = "xtremecomputer";
     imports = [
         ./../../packages/orcaslicer-appimage.nix
         ./../../modules/hyprland.nix
@@ -44,6 +43,8 @@
             source = config.dotfiles.directory+"/.config/nvim";
         };
     };
+
+    wayland.windowManager.hyprland.settings.monitor = lib.mkForce ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"];
 
     home.sessionVariables = {
         EDITOR = "neovim";

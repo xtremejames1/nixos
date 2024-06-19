@@ -1,7 +1,6 @@
 { config, pkgs, inputs, lib, ... }:
 
 {
-    lib.host.name = "jxchromenix";
     imports = [
         ./../../modules/hyprland.nix
         ./../../modules/terminal.nix
@@ -33,10 +32,6 @@
     home.packages = with pkgs; [
         neovim
 
-        (pkgs.writeShellScriptBin "screenshot" ''
-         grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png
-         ''
-        )
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -47,26 +42,10 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/nvim";
         };
-        ".config/satty" = {
-            recursive = true;
-            source = config.dotfiles.directory+"/.config/satty";
-        };
     };
-# home manager can also manage your environment variables through
-# 'home.sessionvariables'. if you don't want to manage your shell through home
-# manager then you have to manually source 'hm-session-vars.sh' located at
-# either
-#
-#  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-#
-# or
-#
-#  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-#
-# or
-#
-#  /etc/profiles/per-user/xtremejames1/etc/profile.d/hm-session-vars.sh
-#
+
+    wayland.windowManager.hyprland.settings.monitor = lib.mkForce ["eDP-1,preferred,auto,auto,transform,0"];
+
     home.sessionVariables = {
         editor = "neovim";
         NIXHOST = "chromebook";

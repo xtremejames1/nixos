@@ -25,15 +25,6 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   {
     nixosConfigurations = {
-      default = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;};
-        modules = [
-          ./hosts/default/configuration.nix
-          ./users/xtremejames1.nix
-          ./variables.nix
-          inputs.home-manager.nixosModules.default
-        ];
-      };
       xtremecomputer1 = nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
@@ -41,6 +32,7 @@
         modules = [
           ./hosts/xtremecomputer1/configuration.nix
           ./users/xtremejames1.nix
+          ./variables.nix
         ];
       };
 
@@ -51,6 +43,7 @@
         modules = [
           ./hosts/chromebook/configuration.nix
           ./users/xtremejames1.nix
+          ./variables.nix
         ];
       };
     };

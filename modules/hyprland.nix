@@ -1,7 +1,4 @@
 { inputs, pkgs, config, lib, ...}:
-let
-host = config.host.name;
-in
 {
   home.packages = with pkgs; [
     hyprpaper
@@ -21,6 +18,8 @@ in
     anyrun
     ianny
 
+    kdePackages.kwallet
+
 #screen rotation
     iio-sensor-proxy
     inputs.iio-hyprland.packages.${pkgs.system}.default
@@ -29,6 +28,11 @@ in
       satty
       grim
       slurp
+
+      (pkgs.writeShellScriptBin "screenshot" ''
+       grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png
+       ''
+      )
   ];
 
   wayland.windowManager.hyprland = {
@@ -36,7 +40,7 @@ in
     plugins = [
     ];
     settings = {
-      monitor = if (host == "xtremecomputer1") then ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"] else ["eDP-1,preferred,auto,auto,transform,0"];
+      # monitor = if (host == "xtremecomputer1") then ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"] else ["eDP-1,preferred,auto,auto,transform,0"];
       # monitor = lib.mkIf (config.host.name == "xtremecomputer1") ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"];
 
 # launch apps on startup
@@ -225,7 +229,10 @@ in
             recursive = true;
             source = config.dotfiles.directory+"/.config/yazi";
         };
-        ".TEST".text = config.host.name;
+        ".config/satty" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/satty";
+        };
   };
 
   programs.waybar = {
