@@ -20,9 +20,10 @@
             rb = "~/nixos/rebuild.sh";
             du = "dust";
             df = "duf";
-            vimhome = "nvim ~/nixos/hosts/chromebook/home.nix";
-            vimconfig = "nvim ~/nixos/hosts/chromebook/configuration.nix";
             fix_zsh_history = "~/fix_zsh_history.sh";
+            vimhome = "vim ~/nixos/hosts/xtremecomputer1/home.nix";
+            vimconfig = "vim ~/nixos/hosts/xtremecomputer1/configuration.nix";
+
         };
         initExtra = ''
             source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme

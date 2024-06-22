@@ -6,6 +6,7 @@
         ./../../modules/terminal.nix
         ./../../modules/git.nix
         ./../../modules/music.nix
+        ./../../modules/browser.nix
         ./../../variables.nix
     ];
 
@@ -20,14 +21,6 @@
 # want to update the value, then make sure to first check the Home Manager
 # release notes.
     home.stateVersion = "23.11"; # Please read the comment before changing.
-
-    nixpkgs.config = {
-        allowUnfree = true;
-        vivaldi = {
-            enableWideVine = true;
-            proprietaryCodecs = true;
-        };
-    };
 
     home.packages = with pkgs; [
         neovim
@@ -44,6 +37,7 @@
         };
     };
 
+# Custom Module Options
     wayland.windowManager.hyprland.settings.monitor = lib.mkForce ["eDP-1,preferred,auto,auto,transform,0"];
 
     home.sessionVariables = {

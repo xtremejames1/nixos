@@ -2,7 +2,7 @@
 {
     imports = [
         ./../../packages/orcaslicer-appimage.nix
-        ./../../modules/hyprland.nix
+        ./../../modules/browser.nix
         ./../../modules/terminal.nix
         ./../../modules/git.nix
         ./../../modules/music.nix
@@ -21,18 +21,9 @@
 # release notes.
     home.stateVersion = "23.11"; # Please read the comment before changing.
 
-    nixpkgs.config = {
-        allowUnfree = true;
-        vivaldi = {
-            enableWideVine = true;
-            proprietaryCodecs = true;
-        };
-    };
-
     home.packages = [
         pkgs.neovim
     ];
-
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage
 # plain files is through 'home.file'.
@@ -42,9 +33,13 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/nvim";
         };
+        ".config/vivaldi-stable.conf".text = "--password-store=gnome-libsecret";
     };
 
+# CUSTOM MODULE OPTIONS
     wayland.windowManager.hyprland.settings.monitor = lib.mkForce ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"];
+    programs.zsh.shellAliases.vimhome = lib.mkForce "nvim ~/nixos/hosts/xtremecomputer1/home.nix";
+    programs.zsh.shellAliases.vimconfig = lib.mkForce "nvim ~/nixos/hosts/xtremecomputer1/configuration.nix";
 
     home.sessionVariables = {
         EDITOR = "neovim";

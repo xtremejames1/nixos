@@ -9,18 +9,19 @@ let
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./../../variables.nix
-      inputs.home-manager.nixosModules.default
-    ];
+  [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./../../variables.nix
+    ./../../modules/keyring.nix
+    ./../../modules/hyprland.nix
+    ./../../modules/webdev.nix
+    inputs.home-manager.nixosModules.default
+  ];
 
-  # Bootloader.
+# Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
-
-  
 
   networking.hostName = "xtremecomputer1"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -180,9 +181,6 @@ in
     unstable.caligula
     inkscape
     poppler_utils
-    vivaldi
-    vivaldi-ffmpeg-codecs
-    widevine-cdm
     discord
     obsidian
     gcc
@@ -204,6 +202,7 @@ in
     lua-language-server
     wineWowPackages.stable
     syncthing
+    rustdesk
 
     (pkgs.nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
 
@@ -211,6 +210,7 @@ in
 
   programs.zsh.enable = true;
   programs.hyprland.enable = true;
+  programs.extra-container.enable = true;
 
   home-manager = {
     extraSpecialArgs = {
