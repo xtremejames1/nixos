@@ -2,7 +2,6 @@
 
 {
     imports = [
-        ./../../modules/hyprland.nix
         ./../../modules/terminal.nix
         ./../../modules/git.nix
         ./../../modules/music.nix
