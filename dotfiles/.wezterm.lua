@@ -35,9 +35,9 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 		wezterm.log_info("We're running Windows 11!")
 	end
 
-	---config.default_domain = 'WSL:Ubuntu'
 	--- Set Pwsh as the default on Windows
-	config.default_prog = { "pwsh.exe", "-NoLogo" }
+	config.default_domain = "WSL:Ubuntu"
+	config.default_prog = { "wsl.exe", "-NoLogo" }
 	table.insert(launch_menu, {
 		label = "WSL",
 		args = { "wsl.exe" },
@@ -49,6 +49,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	table.insert(launch_menu, {
 		label = "Pwsh",
 		args = { "pwsh.exe", "-NoLogo" },
+		domain = { DomainName = "local" },
 	})
 else
 	--- Non-Windows Machine
