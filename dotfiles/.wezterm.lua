@@ -41,6 +41,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	table.insert(launch_menu, {
 		label = "WSL",
 		args = { "wsl.exe" },
+		domain = { DomainName = "WSL:Ubuntu" },
 	})
 	table.insert(launch_menu, {
 		label = "ssh home",
@@ -64,7 +65,8 @@ else
 end
 
 -- drip
-config.color_scheme = "Catppuccin Mocha"
+-- config.color_scheme = "Gruvbox dark, hard (base16)"
+config.color_scheme = "Kanagawa (Gogh)"
 config.font = wezterm.font("IosevkaTerm Nerd Font Mono", { weight = "Medium", italic = false })
 config.font_size = 10
 config.default_cursor_style = "BlinkingBar"

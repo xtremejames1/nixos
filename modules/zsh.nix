@@ -24,6 +24,9 @@
 
     };
     initExtra = ''
+      path+=('/home/xtremejames1/.local/bin')
+      export PAT
+
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       source ~/.p10k.zsh
       if [[ -n $SSH_CONNECTION ]]; then
