@@ -23,6 +23,7 @@
 
     home.packages = [
         pkgs.neovim
+        pkgs.zed-editor
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage

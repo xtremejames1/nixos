@@ -35,9 +35,9 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Telescope
-vim.keymap.set('n', '<leader>ff', ':Telescope find_files')
-vim.keymap.set('n', '<leader>fb', ':Telescope buffers')
-vim.keymap.set('n', '<leader>fi', ':Telescope current_buffer_fuzzy_find')
+vim.keymap.set('n', '<leader>ff\r', ':Telescope find_files')
+vim.keymap.set('n', '<leader>fb\r', ':Telescope buffers')
+vim.keymap.set('n', '<leader>fi\r', ':Telescope current_buffer_fuzzy_find')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

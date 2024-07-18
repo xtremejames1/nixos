@@ -17,6 +17,11 @@ in
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
+    settings = {
+      mysqld = {
+        bind_address = "0.0.0.0";
+      };
+    };
   };
   services.phpfpm.pools.${app} = {
     user = app;
