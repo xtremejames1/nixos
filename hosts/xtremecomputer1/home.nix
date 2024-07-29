@@ -1,7 +1,6 @@
 { config, pkgs, inputs, lib, ... }:
 {
     imports = [
-        ./../../packages/orcaslicer-appimage.nix
         ./../../modules/browser.nix
         ./../../modules/terminal.nix
         ./../../modules/git.nix
@@ -24,6 +23,8 @@
     home.packages = [
         pkgs.neovim
         pkgs.zed-editor
+        pkgs.orca-slicer
+        pkgs.fastfetch
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage

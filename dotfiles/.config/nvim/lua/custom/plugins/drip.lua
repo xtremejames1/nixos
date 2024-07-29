@@ -9,6 +9,10 @@ return {
     priority = 1000,
     config = function()
       vim.cmd 'colorscheme kanagawa'
+      vim.cmd 'highlight CursorColumn guibg=#2f3d3d'
+      vim.cmd 'highlight CursorLine guibg=#2f3d3d'
+      vim.cmd 'set cursorcolumn'
+      vim.cmd 'set cursorline'
     end,
   },
   {

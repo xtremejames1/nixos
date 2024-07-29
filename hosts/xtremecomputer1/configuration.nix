@@ -12,9 +12,6 @@ in
   [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./../../variables.nix
-    ./../../modules/keyring.nix
-    ./../../modules/hyprland.nix
-    ./../../modules/webdev.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -187,11 +184,10 @@ in
     sqlite
     obs-studio
     cmake
-    lollypop
+    # lollypop
     vlc
     subversion
     python3
-    gdown
     steam
     lutris
     bottles
