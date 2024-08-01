@@ -36,6 +36,23 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/nvim";
         };
+        ".config/nvim/lua/custom/config/init.lua".text = ''
+        require('wsl.lua');
+        '';
+        ".config/nvim/lua/custom/config/wsl.lua".text = ''
+            vim.g.clipboard = {
+                name = 'WslClipboard',
+                copy = {
+                    ['+'] = { 'clip.exe' },
+                    ['*'] = { 'clip.exe' },
+                },
+                paste = {
+                    ['+'] = { 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
+                    ['*'] = { 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))' },
+                },
+                cache_enabled = 0,
+            }
+        '';
         ".wezterm.lua".source = config.dotfiles.directory+"/.wezterm.lua";
     };
 
