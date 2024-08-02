@@ -18,7 +18,7 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+-- vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -63,7 +63,9 @@ vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt.foldcolumn = '0'
 vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 2
-vim.opt.foldnestmax = 4
+vim.opt.foldlevelstart = 3
+vim.opt.foldnestmax = 5
+
+require 'custom.config'
 
 -- vim: ts=2 sts=2 sw=2 et
