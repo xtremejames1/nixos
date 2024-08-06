@@ -17,5 +17,7 @@
         duf
         bottom
         gping
+        yazi
+        ianny
   ];
 }

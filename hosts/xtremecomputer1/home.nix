@@ -5,7 +5,6 @@
         ./../../modules/terminal.nix
         ./../../modules/git.nix
         ./../../modules/music.nix
-        ./../../modules/calendar.nix
         ./../../variables.nix
     ];
 
@@ -33,11 +32,6 @@
         calcurse
         aichat
         feh
-        perl
-        perl536Packages.Appcpanminus
-        azure-cli
-        azure-cli-extensions.image-copy-extension
-        python312Packages.pip
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -48,7 +42,16 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/nvim";
         };
+        ".config/oh-my-posh" = {
+            recursive = true;
+            source = config.dotfiles.directory+"/.config/oh-my-posh";
+        };
         ".config/vivaldi-stable.conf".text = "--password-store=gnome-libsecret";
+    };
+
+    programs.oh-my-posh = {
+        enable = true;
+        settings = builtins.fromJSON (builtins.readFile "/home/xtremejames1/.config/oh-my-posh/xtr3m.omp.json");
     };
 
 # CUSTOM MODULE OPTIONS
