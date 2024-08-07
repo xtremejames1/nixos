@@ -4,6 +4,7 @@
         ./../../modules/tmux.nix
         ./../../modules/zsh.nix
         ./../../modules/git.nix
+        ./../../modules/calendar.nix
         ./../../variables.nix
     ];
 
@@ -26,6 +27,8 @@
         yarn
         foliate
         tcpdump
+        azure-cli
+        azure-cli-extensions.image-copy-extension
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage

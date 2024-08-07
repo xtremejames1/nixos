@@ -1,7 +1,7 @@
 return {
   {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x'
+    branch = 'v3.x',
   },
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
@@ -50,6 +50,7 @@ return {
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
+
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
@@ -118,6 +119,10 @@ return {
               buffer = event.buf,
               callback = vim.lsp.buf.clear_references,
             })
+          end
+
+          if vim.lsp.inlay_hint then
+            vim.lsp.inlay_hint.enable(true, { 0 })
           end
         end,
       })

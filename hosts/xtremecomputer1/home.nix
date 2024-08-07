@@ -45,11 +45,6 @@
         ".config/vivaldi-stable.conf".text = "--password-store=gnome-libsecret";
     };
 
-    programs.oh-my-posh = {
-        enable = true;
-        settings = builtins.fromJSON (builtins.readFile "/home/xtremejames1/nixos/dotfiles/.config/oh-my-posh/xtr3m.omp.json");
-    };
-
 # CUSTOM MODULE OPTIONS
     wayland.windowManager.hyprland.settings.monitor = lib.mkForce ["HDMI-A-1,1920x1080,0x0,auto,transform,0" "DP-3,1360x768,1920x0,auto,transform,0"];
     programs.zsh.shellAliases.vimhome = lib.mkForce "nvim ~/nixos/hosts/xtremecomputer1/home.nix";

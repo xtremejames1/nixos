@@ -64,4 +64,9 @@
       ];
     };
   };
+
+  programs.oh-my-posh = {
+    enable = true;
+    settings = builtins.fromJSON (builtins.readFile "/home/xtremejames1/nixos/dotfiles/.config/oh-my-posh/xtr3m.omp.json");
+  };
 }
