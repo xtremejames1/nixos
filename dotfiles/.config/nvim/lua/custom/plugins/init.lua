@@ -96,4 +96,8 @@ return {
       -- add any custom options here
     },
   },
+  {
+    'wakatime/vim-wakatime',
+    lazy = false
+  }
 }

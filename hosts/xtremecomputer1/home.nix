@@ -42,16 +42,12 @@
             recursive = true;
             source = config.dotfiles.directory+"/.config/nvim";
         };
-        ".config/oh-my-posh" = {
-            recursive = true;
-            source = config.dotfiles.directory+"/.config/oh-my-posh";
-        };
         ".config/vivaldi-stable.conf".text = "--password-store=gnome-libsecret";
     };
 
     programs.oh-my-posh = {
         enable = true;
-        settings = builtins.fromJSON (builtins.readFile "/home/xtremejames1/.config/oh-my-posh/xtr3m.omp.json");
+        settings = builtins.fromJSON (builtins.readFile "/home/xtremejames1/nixos/dotfiles/.config/oh-my-posh/xtr3m.omp.json");
     };
 
 # CUSTOM MODULE OPTIONS
