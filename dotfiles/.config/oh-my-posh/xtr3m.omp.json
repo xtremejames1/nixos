@@ -46,10 +46,10 @@
         {
           "background": "#76946A",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#DCA561{{ end }}",
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#d69443{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#E82424{{ end }}",
             "{{ if gt .Ahead 0 }}#2D4F67{{ end }}",
-            "{{ if gt .Behind 0 }}#FF9E3B{{ end }}"
+            "{{ if gt .Behind 0 }}#CC7E2F{{ end }}"
           ],
           "foreground": "#DCD7BA",
           "properties": {
