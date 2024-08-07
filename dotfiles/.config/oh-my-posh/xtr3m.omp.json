@@ -132,6 +132,29 @@
           "style": "plain",
           "template": " {{ .FormattedMs }} ",
           "type": "executiontime"
+        },
+        {
+          "background": "#7E9CD8",
+          "foreground": "#DCD7BA",
+          "properties": {
+            "time_format": "Mon, 02 Jan 2006 <#C8C093>at</> 15:04:05"
+          },
+          "style": "plain",
+          "template": " {{ .CurrentDate | date .Format }} ",
+          "type": "time"
+        },
+        {
+          "type": "owm",
+          "style": "plain",
+          "foreground": "#DCD7BA",
+          "background": "#FFA066",
+          "template": "{{.Weather}} ({{.Temperature}}{{.UnitIcon}})",
+          "properties": {
+            "location": "CHICAGO,US",
+            "units": "metric",
+            "http_timeout": 20,
+            "cache_timeout": 10
+          }
         }
       ],
       "type": "prompt"
