@@ -46,6 +46,17 @@
           ./variables.nix
         ];
       };
+      xtremelaptop3 = nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+        };
+        modules = [
+          ./hosts/xtremelaptop3/configuration.nix
+          ./hosts/xtremelaptop3/hardware-configuration.nix
+          ./users/xtremejames1.nix
+          ./variables.nix
+        ];
+      };
     };
     homeConfigurations = {
       "xtremejames1" = inputs.home-manager.lib.homeManagerConfiguration {
