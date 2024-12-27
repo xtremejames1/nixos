@@ -21,6 +21,7 @@
 
     home.packages = with pkgs; [
         neovim
+        clang
         fastfetch
         libqalculate
         calcurse
