@@ -1,6 +1,7 @@
 { config, pkgs, inputs, lib, ... }:
 {
     imports = [
+        ./../../modules/nvim.nix
         ./../../modules/git.nix
 	./../../modules/zsh.nix
         ./../../modules/tmux.nix
@@ -20,8 +21,6 @@
     home.stateVersion = "23.11"; # Please read the comment before changing.
 
     home.packages = with pkgs; [
-        neovim
-        clang
         fastfetch
         libqalculate
         calcurse
@@ -33,10 +32,6 @@
 # plain files is through 'home.file'.
 
     home.file = {
-        ".config/nvim" = {
-            recursive = true;
-            source = config.dotfiles.directory+"/.config/nvim";
-        };
         ".config/vivaldi-stable.conf".text = "--password-store=gnome-libsecret";
     };
 
@@ -45,7 +40,6 @@
     programs.zsh.shellAliases.vimconfig = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3/configuration.nix";
 
     home.sessionVariables = {
-        EDITOR = "neovim";
         NIXHOST = "xtremelaptop3";
     };
 

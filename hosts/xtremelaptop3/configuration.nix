@@ -21,6 +21,7 @@
   wsl.wslConf.network.hostname = "xtremelaptop3";
 
   programs.zsh.enable = true;
+  programs.nix-ld.enable = true;
   
   home-manager = {
     extraSpecialArgs = {

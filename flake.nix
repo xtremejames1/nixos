@@ -13,6 +13,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    neorg-overlay.url = "github:nvim-neorg/nixpkgs-neorg-overlay";
+
     iio-hyprland.url = "github:JeanSchoeller/iio-hyprland";
 
     hyprland.url = "github:hyprwm/Hyprland";
@@ -22,7 +24,7 @@
     };
  };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, neorg-overlay, ... }@inputs:
   {
     nixosConfigurations = {
       xtremecomputer1 = nixpkgs.lib.nixosSystem {
@@ -51,6 +53,9 @@
           inherit inputs;
         };
         modules = [
+            # home-manager.nixosModules.home-manager {
+            #   nixpkgs.overlays = [neorg-overlay.overlays.default];
+            # }
           ./hosts/xtremelaptop3/configuration.nix
           ./hosts/xtremelaptop3/hardware-configuration.nix
           ./users/xtremejames1.nix
