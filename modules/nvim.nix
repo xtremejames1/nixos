@@ -5,7 +5,6 @@
     libcxx
     libgcc
   ];
-
   home.file = {
     ".config/nvim" = {
       recursive = true;
@@ -75,6 +74,14 @@
         require("gitsigns").setup()
         '';
       }
+      {
+        plugin = neogit;
+        type = "lua";
+        config = ''
+          require('neogit').setup{}
+    '';
+      }
+      diffview-nvim
       neorg-telescope
       undotree
       plenary-nvim
@@ -124,7 +131,20 @@
           require("config.neoscroll")
           '';
       }
-      lualine-nvim
+      {
+        plugin = alpha-nvim;
+        type = "lua";
+        config = ''
+          require("config.alpha")
+    '';
+     }
+      {
+        plugin = lualine-nvim;
+        type = "lua";
+        config = ''
+          require("config.lualine")
+          '';
+      }
       {
         plugin = noice-nvim;
         type = "lua";
@@ -161,6 +181,58 @@
           require("ibl").setup()
           '';
       }
+      
+      {
+        plugin = oil-nvim;
+        type = "lua";
+        config = ''
+          require("oil").setup({
+            default_file_explorer = true,
+          })
+          '';
+      }
+
+      {
+        plugin = flash-nvim;
+        type = "lua";
+        config = ''
+          require("config.flash")
+          '';
+      }
+
+      {
+        plugin = harpoon2;
+        type = "lua";
+        config = ''
+          require("config.harpoon")
+          '';
+      }
+
+      vim-wakatime
+
+      {
+        plugin = persistence-nvim;
+        type = "lua";
+        config = ''
+          require("persistence").setup()
+          '';
+      }
+
+      {
+        plugin = trouble-nvim;
+        type = "lua";
+        config = ''
+          require("config.trouble")
+        '';
+      }
+      {
+        plugin = barbecue-nvim;
+        type = "lua";
+        config = ''
+          require("barbecue").setup()
+          '';
+      }
+      nvim-navic
 
       nvim-treesitter-textobjects
       {
