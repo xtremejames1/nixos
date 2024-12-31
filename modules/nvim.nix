@@ -19,7 +19,8 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    plugins = with pkgs.vimPlugins; [
+    plugins =
+      with pkgs.vimPlugins; [
       nvim-nio
       nui-nvim
       plenary-nvim
@@ -235,6 +236,7 @@
       nvim-navic
 
       nvim-treesitter-textobjects
+
       {
         plugin = nvim-treesitter.withAllGrammars;
         type = "lua";
@@ -242,14 +244,15 @@
           require("config.treesitter")
         '';
       }
+        (nvim-treesitter.withPlugins (_: nvim-treesitter.allGrammars ++ [
+          (pkgs.tree-sitter-grammars.tree-sitter-norg-meta)
+        ]))
     ];
     extraLuaPackages = luaPkgs : [
       luaPkgs.pathlib-nvim # For neorg
       luaPkgs.lua-utils-nvim # For neorg
     ];
     extraPackages = with pkgs; [
-      tree-sitter-grammars.tree-sitter-norg-meta
-
       # Lua
       lua-language-server
       selene
@@ -259,6 +262,8 @@
       nixpkgs-fmt
       nil
 
+      # Other
+      fortune
     ];
     extraLuaConfig = ''
       require("config.general")
