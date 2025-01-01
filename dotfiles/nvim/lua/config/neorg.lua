@@ -6,6 +6,11 @@ require("neorg").setup({
         icon_preset = "diamond", -- And we set our option here.
       },
     },
+    ["core.completion"] = {
+      config = {
+        engine = "nvim-cmp",
+      }
+    },
     ["core.dirman"] = {
       config = {
         workspaces = {
@@ -14,6 +19,8 @@ require("neorg").setup({
         default_workspace = "notes",
       },
     },
+    -- ["core.integrations.image"] = {},
+    -- ["core.latex.renderer"] = {},
   }
 })
 
