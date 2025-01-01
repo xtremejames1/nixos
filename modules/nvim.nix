@@ -243,6 +243,14 @@
         #     '';
         # }
 
+        {
+          plugin = nabla-nvim;
+          type = "lua";
+          config = ''
+          require("config.nabla")
+            '';
+        }
+
         nvim-treesitter-textobjects
 
         {
