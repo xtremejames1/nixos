@@ -1,11 +1,13 @@
-{ config, pkgs, inputs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 {
     imports = [
         ./../../modules/nvim.nix
+        ./../../modules/emacs.nix
         ./../../modules/git.nix
-	./../../modules/zsh.nix
+        ./../../modules/zsh.nix
         ./../../modules/tmux.nix
         ./../../variables.nix
+        inputs.nix-doom-emacs-unstraightened.hmModule
     ];
 
     home.username = "xtremejames1";
@@ -20,12 +22,15 @@
 # release notes.
     home.stateVersion = "23.11"; # Please read the comment before changing.
 
+    nixpkgs.overlays = [ inputs.nix-doom-emacs-unstraightened.overlays.default ];
+
     home.packages = with pkgs; [
         fastfetch
         libqalculate
         calcurse
         aichat
         feh
+        gnupg
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage

@@ -5,24 +5,30 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 
-{ config, lib, pkgs, inputs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
     # include NixOS-WSL modules
-    <nixos-wsl/modules>
+    # <nixos-wsl/modules>
     ./hardware-configuration.nix
     ./../../variables.nix
     inputs.home-manager.nixosModules.default
   ];
 
-  wsl.enable = true;
-  wsl.defaultUser = "xtremejames1";
-  wsl.wslConf.network.hostname = "xtremelaptop3";
+  nix.settings.experimental-features = "nix-command flakes";
+
+  # wsl.enable = true;
+  # wsl.defaultUser = "xtremejames1";
+  # wsl.wslConf.network.hostname = "xtremelaptop3";
 
   programs.zsh.enable = true;
-  programs.nix-ld.enable = true;
-  
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.iosevka-term
+    overpass
+  ];
+
   home-manager = {
     extraSpecialArgs = {
       inherit inputs;
@@ -30,6 +36,10 @@
     users = {
       "xtremejames1" = import ./home.nix;
     };
+  };
+
+  environment.variables = {
+    EDITOR = "neovim";
   };
 
   # This value determines the NixOS release from which the default

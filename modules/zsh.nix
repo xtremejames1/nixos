@@ -54,12 +54,10 @@
           "tmux"
           "vi-mode"
           "web-search"
-          "ripgrep"
           "last-working-dir"
           "history"
           "gh"
           "fzf"
-          "fd"
           "fasd"
       ];
     };

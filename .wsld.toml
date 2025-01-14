@@ -1,0 +1,33 @@
+# Leave out this section to disable X11 forwarding
+[x11]
+# X11 display number to listen *inside* WSL. The X server in Windows can specified as argument when running wsldhost.exe.
+# Default to 0, can be omitted.
+display = 0
+# Whether to override existing X11 sockets. If your setup does not clean up /tmp automatically, then you probably want to set this to true.
+# Default to false.
+force = true
+
+# Leave out this section to disable time synchronisation
+# If you need time synchronisation, you should either run wsld with root, or give it `cap_sys_time` capability using `sudo setcap cap_sys_time+eip <PATH to wsld>`.
+[time]
+# Interval between syncs
+# Default to 10min, can be omitted
+interval = "1hr"
+
+# Leave out this section to disable TCP port forwarding
+# This feature is experimental, feedbacks and suggestions welcome.
+# This feature will WSL localhost to Windows localhost, so you can connect
+# servers running in Windows in WSL. This feature requires interaction with
+# iptables, so you need to either run wsld as root or allow wsld to use sudo.
+# [tcp_forward]
+# # iptables command to use. nftables seem not to work so you need to have
+# # the legacy one. If you are not using Debian it is likely you need to change it.
+# iptables_cmd = "sudo iptables-legacy"
+# # Ports to forward
+# ports = [ 1234 ]
+
+# # Leave out this section to disable SSH agent forwarding
+# [ssh_agent]
+# # Default to the path below, can be omitted if unchanged
+# # Set `SSH_AUTH_SOCK` to the path you specified.
+# ssh_auth_sock = "/tmp/.wsld/ssh_auth_sock"

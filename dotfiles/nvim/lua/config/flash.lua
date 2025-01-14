@@ -1,3 +1,5 @@
+require("flash").setup()
+require("flash").toggle()
 require("which-key").add({
     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
