@@ -7,7 +7,6 @@
       nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
       nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-
       home-manager = {
         url = "github:nix-community/home-manager";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +27,9 @@
         url = "github:marienz/nix-doom-emacs-unstraightened";
         inputs.nixpkgs.follows = "";
       };
+
+      doom-config.url = "https://github.com/xtremejames1/doomconfig/tree/main";
+      doom-config.flake = false;
 
       nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     };

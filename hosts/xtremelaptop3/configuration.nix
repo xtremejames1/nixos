@@ -5,7 +5,7 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 
 {
   imports = [
@@ -35,6 +35,24 @@
      };
     users = {
       "xtremejames1" = import ./home.nix;
+    };
+  };
+
+  time.timeZone = lib.mkDefault "America/New_York";
+
+  systemd.timers."ics2org" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "15m";
+      OnUnitActiveSec = "15m";
+      Unit = "ics2org.service";
+    };
+  };
+
+  systemd.services."ics2org" = {
+    path = [ pkgs.bash pkgs.wget pkgs.gawk ];
+    serviceConfig = {
+      ExecStart = "/home/xtremejames1/nixos/dotfiles/scripts/ics2org.sh";
     };
   };
 

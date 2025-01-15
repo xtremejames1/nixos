@@ -10,8 +10,15 @@ in
     sqlite
     tex
   ];
+
+  home.sessionPath = [
+    "$HOME/nixos/dotfiles/scripts"
+  ];
+
   programs.doom-emacs = {
     enable = true;
-    doomDir = /home/xtremejames1/doomdir;
+    doomDir = /home/xtremejames1/doomconfig;
   };
+
+
 }
