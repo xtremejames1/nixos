@@ -16,6 +16,10 @@ local mux = wezterm.mux
 local act = wezterm.action
 local keys = {
 	{ key = "T", mods = "SHIFT|CTRL", action = wezterm.action.ShowLauncher },
+	{ key = 'Enter',
+		mods = 'ALT',
+		action = wezterm.action.DisableDefaultAssignment,
+	}
 }
 local mouse_bindings = {}
 local launch_menu = {}

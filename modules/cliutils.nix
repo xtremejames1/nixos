@@ -12,7 +12,6 @@
         tldr
         unzip
         delta
-        cargo
         dust
         duf
         bottom

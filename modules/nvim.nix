@@ -4,6 +4,7 @@
     clang
     libcxx
     libgcc
+    pyright
   ];
   home.file = {
     ".config/nvim" = {

@@ -56,6 +56,34 @@
     };
   };
 
+  services.syncthing = {
+    dataDir = "/home/xtremejames1/";
+    user = "xtremejames1";
+    enable = true;
+    openDefaultPorts = true;
+    settings = {
+      devices = {
+        "pixel" = { id = "2J6HT27-HTLX6OI-3SRU25T-G3I3MY4-Q5F7TZJ-6ZQ7ZBY-3BRGBX2-HRNWXA6"; };
+      };
+      folders = {
+        "org" = {
+          path = "/home/xtremejames1/org";
+          devices = [ "pixel" ];
+        };
+      };
+    };
+  };
+
+  services.pcscd.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-curses;
+    enableSSHSupport = true;
+  };
+
+  # environment.systemPackages = with pkgs; [
+  # ];
+
   environment.variables = {
     EDITOR = "neovim";
   };

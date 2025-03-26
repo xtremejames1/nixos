@@ -1,5 +1,17 @@
 {
   "nodes": {
+    "doom-config": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-5Fn83w0yD1Xf4Ul9fn9XJGTHHMzPVMl8Dr3ItC96wus=",
+        "type": "file",
+        "url": "https://github.com/xtremejames1/doomconfig/tree/main"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/xtremejames1/doomconfig/tree/main"
+      }
+    },
     "doomemacs": {
       "flake": false,
       "locked": {
@@ -396,6 +408,7 @@
     },
     "root": {
       "inputs": {
+        "doom-config": "doom-config",
         "home-manager": "home-manager",
         "hyprgrass": "hyprgrass",
         "hyprland": "hyprland",
@@ -403,7 +416,28 @@
         "nix-doom-emacs-unstraightened": "nix-doom-emacs-unstraightened",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "rust-overlay": "rust-overlay"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1742178793,
+        "narHash": "sha256-S2onMdoDS4tIYd3/Jc5oFEZBr2dJOgPrh9KzSO/bfDw=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "954582a766a50ebef5695a9616c93b5386418c08",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "systems": {

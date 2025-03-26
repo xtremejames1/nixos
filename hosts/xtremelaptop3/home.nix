@@ -32,7 +32,28 @@
         feh
         gnupg
         wget
+        clang
+        python3Full
+        direnv
     ];
+
+    # Add direnv hook to your shell
+    programs.direnv = {
+        enable = true;
+        enableZshIntegration = true; # or zshIntegration = true;
+        nix-direnv.enable = true;     # Improved direnv integration
+    };
+
+    # Make pythonify script executable and available in PATH
+    home.file.".config/nix/scripts/pythonify.sh" = {
+        source = ./scripts/pythonify.sh;
+        executable = true;
+    };
+
+    home.shellAliases = {
+        pythonify = "$HOME/.config/nix/scripts/pythonify.sh";
+    };
+
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage
 # plain files is through 'home.file'.
@@ -44,6 +65,9 @@
 # CUSTOM MODULE OPTIONS
     programs.zsh.shellAliases.vimhome = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3/home.nix";
     programs.zsh.shellAliases.vimconfig = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3/configuration.nix";
+
+    programs.git.userEmail = lib.mkForce "jx396@cornell.edu";
+    programs.git.userName = lib.mkForce "James Xiao";
 
     home.sessionVariables = {
         NIXHOST = "xtremelaptop3";

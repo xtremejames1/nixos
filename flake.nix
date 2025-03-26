@@ -20,6 +20,11 @@
         inputs.hyprland.follows = "hyprland"; # IMPORTANT
       };
 
+      rust-overlay = {
+        url = "github:oxalica/rust-overlay";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+
       # nix-doom-emacs-unstraightened.url = "github:marienz/nix-doom-emacs-unstraightened";
       # # Optional, to download less. Neither the module nor the overlay uses this input.
       # nix-doom-emacs-unstraightened.inputs.nixpkgs.follows = "";
@@ -34,8 +39,11 @@
       nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, ... }@inputs:
-    {
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, rust-overlay, ... }@inputs:
+    let
+      system = "x86_64-linux";
+    in
+      {
       nixosConfigurations = {
         xtremecomputer1 = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -77,6 +85,13 @@
             ./hosts/xtremelaptop3/hardware-configuration.nix
             ./users/xtremejames1.nix
             ./variables.nix
+            ({ pkgs, ... }: {
+              nixpkgs.overlays = [ rust-overlay.overlays.default ];
+              environment.systemPackages = [ (pkgs.rust-bin.stable.latest.default.override {
+                extensions = [ "rust-src" ];
+                targets = [ "thumbv6m-none-eabi" ];
+              }) ];
+            })
           ];
         };
       };
