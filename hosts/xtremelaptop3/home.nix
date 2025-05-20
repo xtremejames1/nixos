@@ -23,6 +23,7 @@
     home.stateVersion = "23.11"; # Please read the comment before changing.
 
     nixpkgs.overlays = [ inputs.nix-doom-emacs-unstraightened.overlays.default ];
+    nixpkgs.config.allowUnfree = true;
 
     home.packages = with pkgs; [
         fastfetch
@@ -35,6 +36,13 @@
         clang
         python3Full
         direnv
+        cmake
+        gnumake
+        pcl
+        eigen
+        boost.dev
+        boost.out
+        vtk
     ];
 
     # Add direnv hook to your shell
@@ -44,9 +52,9 @@
         nix-direnv.enable = true;     # Improved direnv integration
     };
 
-    # Make pythonify script executable and available in PATH
+    # Make pythonify script executable and available in PATH 
     home.file.".config/nix/scripts/pythonify.sh" = {
-        source = ./scripts/pythonify.sh;
+        source = ../../dotfiles/scripts/pythonify.sh;  # Path from ~/nixos/hosts/xtremelaptop3/ to ~/nixos/dotfiles/scripts/
         executable = true;
     };
 

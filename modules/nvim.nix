@@ -126,13 +126,13 @@
           require("bufferline").setup{}
           '';
         }
-        {
-          plugin = neoscroll-nvim;
-          type = "lua";
-          config = ''
-          require("config.neoscroll")
-          '';
-        }
+        # {
+        #   plugin = neoscroll-nvim;
+        #   type = "lua";
+        #   config = ''
+        #   require("config.neoscroll")
+        #   '';
+        # }
         {
           plugin = alpha-nvim;
           type = "lua";
@@ -273,6 +273,7 @@
     extraPackages = with pkgs; [
       # Lua
       lua-language-server
+      rust-analyzer
       selene
 
       # Nix
