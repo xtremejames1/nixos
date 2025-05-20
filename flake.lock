@@ -1,5 +1,17 @@
 {
   "nodes": {
+    "doom-config": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-+FxlrG8bVjpqGvLSfzLAbbWLcpw+OvA4hNB0y8qROiM=",
+        "type": "file",
+        "url": "https://github.com/xtremejames1/doomconfig/tree/main"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/xtremejames1/doomconfig/tree/main"
+      }
+    },
     "doomemacs": {
       "flake": false,
       "locked": {
@@ -396,6 +408,7 @@
     },
     "root": {
       "inputs": {
+        "doom-config": "doom-config",
         "home-manager": "home-manager",
         "hyprgrass": "hyprgrass",
         "hyprland": "hyprland",
