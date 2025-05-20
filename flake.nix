@@ -94,6 +94,17 @@
             })
           ];
         };
+        xtremelaptop3b = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/xtremelaptop3b/configuration.nix
+            ./users/xtremejames1.nix
+            ./variables.nix
+          ];
+        };
       };
       homeConfigurations = {
         "xtremejames1" = inputs.home-manager.lib.homeManagerConfiguration {
