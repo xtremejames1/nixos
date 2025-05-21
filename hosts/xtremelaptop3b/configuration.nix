@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../../variables.nix
+      ./../../modules/windowmanager.nix
       inputs.home-manager.nixosModules.default
     ];
 
@@ -46,16 +47,39 @@
   services.xserver.xkb.layout = "us";
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
+  services.interception-tools =
+    let
+      dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
+        MAPPINGS:
+          - KEY: KEY_CAPSLOCK
+            TAP: KEY_ESC
+            HOLD: KEY_LEFTCTRL
+      '';
+    in
+    {
+      enable = true;
+      plugins = lib.mkForce [
+        pkgs.interception-tools-plugins.dual-function-keys
+      ];
+      udevmonConfig = ''
+        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+          DEVICE:
+            NAME: "USB Keyboard"
+            EVENTS:
+              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+      '';
+    };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable sound.
-  hardware.pulseaudio.enable = true;
+  # hardware.pulseaudio.enable = true;
   # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
+  services.pipewire = {
+    enable = true;
+    pulse.enable = true;
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -70,6 +94,13 @@
   };
 
   programs.zsh.enable = true;
+  
+  security.polkit.enable = true;
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.iosevka-term
+    overpass
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

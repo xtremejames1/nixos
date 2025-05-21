@@ -5,6 +5,8 @@
         ./../../modules/git.nix
         ./../../modules/zsh.nix
         ./../../modules/tmux.nix
+        ./../../modules/terminal.nix
+        ./../../modules/browser.nix
         ./../../variables.nix
         inputs.nix-doom-emacs-unstraightened.hmModule
     ];
@@ -31,6 +33,8 @@
         feh
         gnupg
         wget
+        discord
+        steam
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage

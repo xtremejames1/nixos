@@ -3,46 +3,46 @@
   home-manager.users."xtremejames1" = {
     home.packages = with pkgs; [
       hyprpaper
-        libnotify
-        hyprlock
-        bemenu
+      libnotify
+      hyprlock
+      bemenu
 
-#volume control
-        pavucontrol
-        pamixer
+      #volume control
+      pavucontrol
+      pamixer
 
-        wl-clipboard
-        xdg-desktop-portal-hyprland
-        brightnessctl
-        hypridle
-        yazi
-        anyrun
-        ianny
+      wl-clipboard
+      xdg-desktop-portal-hyprland
+      brightnessctl
+      hypridle
+      yazi
+      anyrun
+      ianny
+      kitty
+      #screen rotation
+      iio-sensor-proxy
+      inputs.iio-hyprland.packages.${pkgs.system}.default
 
-#screen rotation
-        iio-sensor-proxy
-        inputs.iio-hyprland.packages.${pkgs.system}.default
+      #screenshot
+      satty
+      grim
+      slurp
 
-#screenshot
-        satty
-        grim
-        slurp
-
-        (pkgs.writeShellScriptBin "screenshot" ''
+      (pkgs.writeShellScriptBin "screenshot" ''
          grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png
          ''
-        )
-        ];
+      )
+    ];
 
     wayland.windowManager.hyprland = {
       enable = true;
       plugins = [
       ];
       settings = {
-# launch apps on startup
+        # launch apps on startup
         exec-once = "waybar & hyprpaper & swaync & hypridle & iio-hyprland eDP-1 & ianny";
 
-# default apps
+        # default apps
         "$terminal" = "wezterm";
         "$fileManager" = "wezterm start -- yazi";
         "$menu" = "bemenu-run --binding vim";
@@ -50,7 +50,7 @@
 
         env = [
           "XCURSOR_SIZE,24"
-            "QT_QPA_PLATFORMTHEME,qt5ct"
+          "QT_QPA_PLATFORMTHEME,qt5ct"
         ];
 
         input = {
@@ -98,21 +98,21 @@
           enabled = "yes";
           bezier = [
             "myBezier, 0.05, 0.9, 0.1, 1.05"
-              "expOut, .16, 1, 0.3, 1"
-              "easeOutBack, 0.34, 1.56, 0.69, 0.97"
+            "expOut, .16, 1, 0.3, 1"
+            "easeOutBack, 0.34, 1.56, 0.69, 0.97"
           ];
 
           animation = [
             "windows, 1, 3, myBezier"
-              "windowsOut, 1, 4, default, popin 80%"
-              "border, 1, 3, easeOutBack"
-              "borderangle, 1, 4, default"
-              "fade, 1, 4, default"
-              "workspaces, 1, 4, expOut"
+            "windowsOut, 1, 4, default, popin 80%"
+            "border, 1, 3, easeOutBack"
+            "borderangle, 1, 4, default"
+            "fade, 1, 4, default"
+            "workspaces, 1, 4, expOut"
           ];
         };
         dwindle = {
-# See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+          # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
           pseudotile = "yes";
           preserve_split = "yes";
         };
@@ -127,77 +127,77 @@
           disable_hyprland_logo = "true";
         };
 
-# BINDS
+        # BINDS
 
         "$mainMod" = "SUPER";
         bind = [
           "$mainMod, Q, exec, $terminal"
-            "$mainMod, C, killactive,"
-            "$mainMod, M, exit,"
-            "$mainMod, E, exec, $fileManager"
-            "$mainMod, V, togglefloating, "
-            "$mainMod, R, exec, $menu"
-            "$mainMod, B, exec, $browser"
-            "$mainMod SHIFT, L, exec, hyprlock"
-            "ALT, Space, exec, anyrun"
-            "$mainMod SHIFT, P, exec, screenshot"
-            "ALT SHIFT, 5, exec, screenshot"
-            "$mainMod SHIFT, N, exec, swaync-client -t -sw"
-#dwindle
-            "$mainMod, P, pseudo,"
-            "$mainMod, space, togglesplit,"
-# Move focus with mainMod + arrow keys
-            "$mainMod, H, movefocus, l"
-            "$mainMod, L, movefocus, r"
-            "$mainMod, K, movefocus, u"
-            "$mainMod, J, movefocus, d"
-# Switch workspaces with mainMod + [0-9]
-            "$mainMod, 1, workspace, 1"
-            "$mainMod, 2, workspace, 2"
-            "$mainMod, 3, workspace, 3"
-            "$mainMod, 4, workspace, 4"
-            "$mainMod, 5, workspace, 5"
-            "$mainMod, 6, workspace, 6"
-            "$mainMod, 7, workspace, 7"
-            "$mainMod, 8, workspace, 8"
-            "$mainMod, 9, workspace, 9"
-            "$mainMod, 0, workspace, 10"
-# Move active window to a workspace with mainMod + SHIFT + [0-9]
-            "$mainMod SHIFT, 1, movetoworkspace, 1"
-            "$mainMod SHIFT, 2, movetoworkspace, 2"
-            "$mainMod SHIFT, 3, movetoworkspace, 3"
-            "$mainMod SHIFT, 4, movetoworkspace, 4"
-            "$mainMod SHIFT, 5, movetoworkspace, 5"
-            "$mainMod SHIFT, 6, movetoworkspace, 6"
-            "$mainMod SHIFT, 7, movetoworkspace, 7"
-            "$mainMod SHIFT, 8, movetoworkspace, 8"
-            "$mainMod SHIFT, 9, movetoworkspace, 9"
-            "$mainMod SHIFT, 0, movetoworkspace, 10"
-# Example special workspace (scratchpad)
-            "$mainMod, S, togglespecialworkspace, magic"
-            "$mainMod SHIFT, S, movetoworkspace, special:magic"
-# Scroll through existing workspaces with mainMod + scroll
-            "$mainMod, mouse_down, workspace, e+1"
-            "$mainMod, mouse_up, workspace, e-1"
-            ];
+          "$mainMod, C, killactive,"
+          "$mainMod, M, exit,"
+          "$mainMod, E, exec, $fileManager"
+          "$mainMod, V, togglefloating, "
+          "$mainMod, R, exec, $menu"
+          "$mainMod, B, exec, $browser"
+          "$mainMod SHIFT, L, exec, hyprlock"
+          "ALT, Space, exec, anyrun"
+          "$mainMod SHIFT, P, exec, screenshot"
+          "ALT SHIFT, 5, exec, screenshot"
+          "$mainMod SHIFT, N, exec, swaync-client -t -sw"
+          #dwindle
+          "$mainMod, P, pseudo,"
+          "$mainMod, space, togglesplit,"
+          # Move focus with mainMod + arrow keys
+          "$mainMod, H, movefocus, l"
+          "$mainMod, L, movefocus, r"
+          "$mainMod, K, movefocus, u"
+          "$mainMod, J, movefocus, d"
+          # Switch workspaces with mainMod + [0-9]
+          "$mainMod, 1, workspace, 1"
+          "$mainMod, 2, workspace, 2"
+          "$mainMod, 3, workspace, 3"
+          "$mainMod, 4, workspace, 4"
+          "$mainMod, 5, workspace, 5"
+          "$mainMod, 6, workspace, 6"
+          "$mainMod, 7, workspace, 7"
+          "$mainMod, 8, workspace, 8"
+          "$mainMod, 9, workspace, 9"
+          "$mainMod, 0, workspace, 10"
+          # Move active window to a workspace with mainMod + SHIFT + [0-9]
+          "$mainMod SHIFT, 1, movetoworkspace, 1"
+          "$mainMod SHIFT, 2, movetoworkspace, 2"
+          "$mainMod SHIFT, 3, movetoworkspace, 3"
+          "$mainMod SHIFT, 4, movetoworkspace, 4"
+          "$mainMod SHIFT, 5, movetoworkspace, 5"
+          "$mainMod SHIFT, 6, movetoworkspace, 6"
+          "$mainMod SHIFT, 7, movetoworkspace, 7"
+          "$mainMod SHIFT, 8, movetoworkspace, 8"
+          "$mainMod SHIFT, 9, movetoworkspace, 9"
+          "$mainMod SHIFT, 0, movetoworkspace, 10"
+          # Example special workspace (scratchpad)
+          "$mainMod, S, togglespecialworkspace, magic"
+          "$mainMod SHIFT, S, movetoworkspace, special:magic"
+          # Scroll through existing workspaces with mainMod + scroll
+          "$mainMod, mouse_down, workspace, e+1"
+          "$mainMod, mouse_up, workspace, e-1"
+        ];
         bindle = [
-# Volume up/down
+          # Volume up/down
           ", XF86AudioRaiseVolume, exec, pamixer -i 5"
-            ", XF86AudioLowerVolume, exec, pamixer -d 5"
-            ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
-            ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+          ", XF86AudioLowerVolume, exec, pamixer -d 5"
+          ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
+          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
         ];
         bindl = [
-# Volume mute
+          # Volume mute
           ", XF86AudioMute, exec, pamixer -t"
-# Tablet mode switch
-            ", switch:on:[Tablet Mode Switch], exec, notify-send bruh"
-            ", switch:off:[Tablet Mode Switch], exec, notify-send bruh"
+          # Tablet mode switch
+          ", switch:on:[Tablet Mode Switch], exec, notify-send bruh"
+          ", switch:off:[Tablet Mode Switch], exec, notify-send bruh"
         ];
         bindm = [
-# Move/resize windows with mainMod + LMB/RMB and dragging
+          # Move/resize windows with mainMod + LMB/RMB and dragging
           "$mainMod, mouse:272, movewindow"
-            "$mainMod, mouse:273, resizewindow"
+          "$mainMod, mouse:273, resizewindow"
         ];
 
       };
@@ -209,7 +209,7 @@
 # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
 # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
         windowrulev2 = suppressevent maximize, class:.* # You'll probably like this.
-                                                          '';
+      '';
     };
 
     home.file = {
@@ -287,12 +287,12 @@
               critical = 15;
             };
             format = "{capacity}% {icon}";
-# // "format-good": ""; // An empty format will hide the module
-# // "format-full": "";
+            # // "format-good": ""; // An empty format will hide the module
+            # // "format-full": "";
             format-icons = ["" "" "" "" ""];
           };
           network = {
-# interface = "wlp2s0";
+            # interface = "wlp2s0";
             format-wifi = "{essid} ({signalStrength}%) ";
             format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
             format-disconnected = "Disconnected ⚠";
@@ -337,7 +337,7 @@
       };
     };
 
-#SWAY NOTIFICTAION CENTER
+    #SWAY NOTIFICTAION CENTER
     services.swaync = {
       enable = true;
       settings = {
