@@ -16,8 +16,13 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
 
   networking.hostName = "xtremelaptop3b"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -92,6 +97,10 @@
       tree
     ];
   };
+
+  environment.systemPackages = with pkgs; [
+    sbctl
+  ];
 
   programs.zsh.enable = true;
   

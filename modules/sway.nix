@@ -1,5 +1,9 @@
 { pkgs, lib, config, ... }:
 {
+  imports = [
+    ./screenshot.nix
+  ];
+
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -16,6 +20,7 @@
           "Mod4+B" = "exec ${browser}";
           "Mod4+E" = "exec ${explorer}";
           "Mod4+R" = "exec ${menu}";
+          "Mod4+Shift+S" = "exec screenshot";
           "XF86AudioMute" = "exec pamixer -t";
           "XF86AudioRaiseVolume" = "exec pamixer -i 5";
           "XF86AudioLowerVolume" = "exec pamixer -d 5";
@@ -38,13 +43,17 @@
           dwt = "enabled";         # disable (touchpad) while typing
           dwtp = "enabled";        # disable (touchpad) while track pointing
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "1.0";   # set mouse sensitivity (between -1 and 1)
+          pointer_accel = "0.8";   # set mouse sensitivity (between -1 and 1)
           scroll_factor = "0.2";    # set scroll speed (between 0.0 and 1.0)
+        };
+        "type:mouse" = {
+          accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
+          pointer_accel = "0.8";   # set mouse sensitivity (between -1 and 1)
         };
         "2:10:TPPS/2_IBM_TrackPoint" = {
           dwt = "enabled";         # disable (touchpad) while typing
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.5";   # set mouse sensitivity (between -1 and 1)
+          pointer_accel = "0.4";   # set mouse sensitivity (between -1 and 1)
         };
       };
     };
@@ -60,40 +69,21 @@
     pavucontrol
     pamixer
 
-    posy-cursors
-
     wl-clipboard
     brightnessctl
     yazi
     anyrun
     ianny
-
-    # screenshot
-    satty
-    grim
-    slurp
-
-    (pkgs.writeShellScriptBin "screenshot" ''
-         grim -g "$(slurp)" - | satty --filename - --output-filename ~/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png
-         ''
-    )
   ];
 
-  home.pointerCursor = {
-      name = "Posy's Cursors";
-      package = pkgs.posy-cursors;
-      size = 16;
-      x11 = {
-        enable = true;
-        defaultCursor = "Posy's Cursors";
-      };
-    };
+  # Cursors
+  # https://nixos.wiki/wiki/Cursor_Themes
 
+  # home.file.".icons/default".source = "${pkgs.posy-cursors}/share/icons/Posy_Cursor";
+  home.file.".icons/default".source = "${pkgs.apple-cursor}/share/icons/macOS";
 
   home.file = {
     ".config/waybar/style.css".source = config.dotfiles.directory+"/.config/waybar/style.css";
-    ".config/hypr/hyprlock.conf".source = config.dotfiles.directory+"/.config/hypr/hyprlock.conf";
-    ".config/hypr/hypridle.conf".source = config.dotfiles.directory+"/.config/hypr/hypridle.conf";
     ".config/mako/config".source = config.dotfiles.directory+"/.config/mako/config";
     ".config/anyrun" = {
       recursive = true;
@@ -102,10 +92,6 @@
     ".config/yazi" = {
       recursive = true;
       source = config.dotfiles.directory+"/.config/yazi";
-    };
-    ".config/satty" = {
-      recursive = true;
-      source = config.dotfiles.directory+"/.config/satty";
     };
   };
 
@@ -116,17 +102,17 @@
         layer = "top";
         position = "top";
         height = 24;
-        modules-left = ["hyprland/workspaces"];
-        modules-center = ["hyprland/window"];
+        modules-left = ["sway/workspaces"];
+        modules-center = ["sway/window"];
         modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock" "custom/notifications"];
-        "hyprland/workspaces" = {
+        "sway/workspaces" = {
           format = "<sup>{icon}</sup> {windows}";
           format-window-separator = "  ";
           window-rewrite-default = "";
           window-rewrite = {
             "title<.*YouTube.*>" = "";
             "title<.*GitHub.*>" = "";
-            "title<.*Vivaldi" = "";
+            "title<.*Zen" = "";
             "title<.*vim.*>" = "";
             "wezterm" = "";
             "obsidian" = "󰠮";

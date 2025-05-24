@@ -23,7 +23,7 @@
       vimconfig = "vim ~/nixos/hosts/xtremecomputer1/configuration.nix";
 
     };
-    initExtra = ''
+    initContent = ''
       path+=('/home/xtremejames1/.local/bin')
       export PAT
 

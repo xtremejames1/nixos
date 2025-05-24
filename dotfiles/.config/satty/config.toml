@@ -1,10 +1,12 @@
-[general]
+    [general]
 # Start Satty in fullscreen mode
 fullscreen = true
 # Exit directly after copy/save action
 early-exit = true
+# Draw corners of rectangles round if the value is greater than 0 (0 disables rounded corners)
+corner-roundness = 12
 # Select the tool on startup [possible values: pointer, crop, line, arrow, rectangle, text, marker, blur, brush]
-initial-tool = "brush"
+initial-tool = "crop"
 # Configure the command to be called on copy, for example `wl-copy`
 copy-command = "wl-copy"
 # Increase or decrease the size of the annotations
@@ -15,16 +17,41 @@ output-filename = "/tmp/test-%Y-%m-%d_%H:%M:%S.png"
 save-after-copy = false
 # Hide toolbars by default
 default-hide-toolbars = false
+# The primary highlighter to use, the other is accessible by holding CTRL at the start of a highlight [possible values: block, freehand]
+primary-highlighter = "block"
+# Disable notifications
+disable-notifications = false
+# Action to perform when the Enter key is pressed [possible values: save-to-clipboard, save-to-file]
+# Deprecated: use actions-on-enter instead
+action-on-enter = "save-to-clipboard"
+# Right click to copy
+# Deprecated: use actions-on-right-click instead
+right-click-copy = false
+
 # Font to use for text annotations
 [font]
-family = "Aptos"
+family = "Roboto"
 style = "Bold"
 
-# custom colours for the colour palette
+# Custom colours for the colour palette
 [color-palette]
-first= "#fb4934"
-second= "#b8bb26"
-third= "#83a598"
-fourth= "#fe8019"
-fifth= "#fabd2f"
-custom= "#282828"
+# These will be shown in the toolbar for quick selection
+palette = [
+    "#00ffff",
+    "#a52a2a",
+    "#dc143c",
+    "#ff1493",
+    "#ffd700",
+    "#008000",
+]
+
+# These will be available in the color picker as presets
+# Leave empty to use GTK's default
+custom = [
+    "#00ffff",
+    "#a52a2a",
+    "#dc143c",
+    "#ff1493",
+    "#ffd700",
+    "#008000",
+]

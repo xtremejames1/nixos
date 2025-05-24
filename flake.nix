@@ -42,9 +42,15 @@
         url = "github:0xc000022070/zen-browser-flake";
         inputs.nixpkgs.follows = "nixpkgs";
       };
+
+      lanzaboote = {
+        url = "github:nix-community/lanzaboote/v0.4.2";
+
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
     };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, rust-overlay, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, rust-overlay, lanzaboote, ... }@inputs:
     let
       system = "x86_64-linux";
     in
@@ -105,6 +111,8 @@
             inherit inputs;
           };
           modules = [
+            lanzaboote.nixosModules.lanzaboote
+
             ./hosts/xtremelaptop3b/configuration.nix
             ./users/xtremejames1.nix
             ./variables.nix
