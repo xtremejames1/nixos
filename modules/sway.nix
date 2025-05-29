@@ -58,6 +58,10 @@
         };
       };
     };
+    extraConfig = ''
+      for_window [class=".*"] inhibit_idle fullscreen
+      for_window [app_id=".*"] inhibit_idle fullscreen
+      '';
   };
 
   # Enable a secret service provider
