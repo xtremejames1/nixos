@@ -10,10 +10,12 @@
       ./hardware-configuration.nix
       ./../../variables.nix
       ./../../modules/windowmanager.nix
+      ./../../modules/fingerprint.nix
       inputs.home-manager.nixosModules.default
     ];
 
   nix.settings.experimental-features = "nix-command flakes";
+  nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = lib.mkForce false;
@@ -88,6 +90,13 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
+  
+  services.cloudflare-warp.enable = true;
+
+  services.tlp.enable = true;
+
+  powerManagement.enable = true;
+  powerManagement.powertop.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.xtremejames1 = {
@@ -100,7 +109,11 @@
 
   environment.systemPackages = with pkgs; [
     sbctl
+    powertop
   ];
+  environment.variables = {
+    RUST_BACKTRACE = 1;
+  };
 
   programs.zsh.enable = true;
   

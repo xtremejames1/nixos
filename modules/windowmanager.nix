@@ -16,7 +16,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --greeting \"if lost, return to James Xiao, email: jx396@cornell.edu, tel: 2248045033\" --cmd sway";
         user = "xtremejames1";
       };
     };
@@ -42,6 +42,8 @@
       };
     };
   };
+
+  security.pam.services.hyprlock = {};
 
   home-manager.users."xtremejames1" = {
     imports = [

@@ -10,7 +10,7 @@
     config = rec {
       modifier = "Mod1";
       terminal = "wezterm";
-      menu = "bemenu-run --binding vim";
+      menu = "rofi -show run";
       keybindings = let
         modifier = config.wayland.windowManager.sway.config.modifier;
         menu = config.wayland.windowManager.sway.config.menu;
@@ -20,6 +20,7 @@
           "Mod4+B" = "exec ${browser}";
           "Mod4+E" = "exec ${explorer}";
           "Mod4+R" = "exec ${menu}";
+          "Mod4+L" = "exec hyprlock";
           "Mod4+Shift+S" = "exec screenshot";
           "XF86AudioMute" = "exec pamixer -t";
           "XF86AudioRaiseVolume" = "exec pamixer -i 5";
@@ -53,7 +54,7 @@
         "2:10:TPPS/2_IBM_TrackPoint" = {
           dwt = "enabled";         # disable (touchpad) while typing
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.4";   # set mouse sensitivity (between -1 and 1)
+          pointer_accel = "0.2";   # set mouse sensitivity (between -1 and 1)
         };
       };
     };
@@ -64,7 +65,7 @@
 
   home.packages = with pkgs; [
     libnotify
-    bemenu
+    rofi-wayland
 
     pavucontrol
     pamixer
@@ -75,6 +76,46 @@
     anyrun
     ianny
   ];
+
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      general = {
+        disable_loading_bar = true;
+        grace = 5;
+        hide_cursor = false;
+        no_fade_in = false;
+      };
+
+      input-field = [
+        {
+          size = "200, 50";
+          position = "0, -80";
+          monitor = "";
+          dots_center = true;
+          fade_on_empty = false;
+          font_color = "rgb(202, 211, 245)";
+          inner_color = "rgb(91, 96, 120)";
+          outer_color = "rgb(24, 25, 38)";
+          outline_thickness = 5;
+          placeholder_text = "Password...";
+          shadow_passes = 2;
+        }
+      ];
+    };
+  };
+
+  services.swayidle = {
+    enable = true;
+    events = [
+        { event = "lock"; command = "${pkgs.hyprlock}/bin/hyprlock"; }
+        { event = "before-sleep"; command = "${pkgs.hyprlock}/bin/hyprlock";
+        }
+    ];
+    timeouts = [
+        { timeout = 180; command = "${pkgs.hyprlock}/bin/hyprlock"; }
+    ];
+  };
 
   # Cursors
   # https://nixos.wiki/wiki/Cursor_Themes
@@ -160,6 +201,7 @@
           format-wifi = "{essid} ({signalStrength}%) ";
           format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
           format-disconnected = "Disconnected ⚠";
+          on-click-right = "wezterm start -- nmtui";
         };
         pulseaudio = {
           format = "{volume}% {icon}";

@@ -10,6 +10,9 @@
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    sessionVariables = {
+      RUST_BACKTRACE=1;
+    };
     shellAliases = {
       ls = "eza";
       vim = "nvim";

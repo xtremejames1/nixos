@@ -45,6 +45,7 @@
         vtk
     ];
 
+    # https://www.reddit.com/r/NixOS/comments/q71v0e/comment/hgn4sar/?context=3&utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
     # Add direnv hook to your shell
     programs.direnv = {
         enable = true;
