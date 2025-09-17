@@ -1,10 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
     clang
     libcxx
     libgcc
     pyright
+    nodejs_24
   ];
   home.file = {
     ".config/nvim" = {
@@ -35,16 +36,13 @@
         telescope-ui-select-nvim
         nvim-web-devicons
         {
-          plugin = nvim-cmp;
+          plugin = blink-cmp;
           type = "lua";
           config = ''
           require("config.cmp")
           '';
         }
-        nvim-cmp
-        cmp_luasnip
-        cmp-nvim-lsp
-        cmp-path
+        blink-pairs
         {
           plugin = nvim-lint;
           type = "lua";
@@ -52,8 +50,6 @@
           require("config.lint")
           '';
         }
-        cmp-buffer
-        cmp-cmdline
         {
           plugin = which-key-nvim;
           type = "lua";
@@ -62,13 +58,13 @@
           '';
         }
         luasnip
-        {
-          plugin = neorg;
-          type = "lua";
-          config = ''
-        require("config.neorg")
-          '';
-        }
+        # {
+        #   plugin = neorg;
+        #   type = "lua";
+        #   config = ''
+        # require("config.neorg")
+        #   '';
+        # }
         {
           plugin = gitsigns-nvim;
           type = "lua";
@@ -84,7 +80,7 @@
           '';
         }
         diffview-nvim
-        neorg-telescope
+        # neorg-telescope
         undotree
         plenary-nvim
         vim-sleuth
@@ -117,7 +113,13 @@
           require("config.mini")
           '';
         }
-        todo-comments-nvim
+        {
+          plugin = todo-comments-nvim;
+          type = "lua";
+          config = ''
+            require("todo-comments").setup{}
+            '';
+        }
         kanagawa-nvim
         {
           plugin = bufferline-nvim;
@@ -252,18 +254,89 @@
             '';
         }
 
-        nvim-treesitter-textobjects
+# For plugins not in nixpkgs, fetch from GitHub
+        (pkgs.vimUtils.buildVimPlugin {
+         name = "org-bullets";
+         src = pkgs.fetchFromGitHub {
+         owner = "nvim-orgmode";
+         repo = "org-bullets.nvim";
+         rev = "21437cf";
+         sha256 = "sha256-cRcO0TDY0v9c/H5vQ1v96WiEkIhJDZkPcw+P58XNL9w="; # Use lib.fakeSha256 first, then replace
+         };
+         })
+
+        (pkgs.vimUtils.buildVimPlugin {
+         name = "telescope-orgmode";
+         src = pkgs.fetchFromGitHub {
+         owner = "nvim-orgmode";
+         repo = "telescope-orgmode.nvim";
+         rev = "a73d9b7";
+         sha256 = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE="; # Use lib.fakeSha256 first, then replace
+         };
+         doCheck = false;
+         })
+
 
         {
-          plugin = nvim-treesitter.withAllGrammars;
+          plugin = orgmode;
+          type = "lua";
+          config = ''
+            require('orgmode').setup({
+                org_agenda_files = '~/orgfiles/**/*',
+                org_default_notes_file = '~/orgfiles/refile.org',
+                })
+          require('org-bullets').setup()
+
+
+          require('telescope').setup()
+            require('telescope').load_extension('orgmode')
+            vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
+            vim.keymap.set('n', '<leader>fh', require('telescope').extensions.orgmode.search_headings)
+            vim.keymap.set('n', '<leader>li', require('telescope').extensions.orgmode.insert_link)
+            '';
+        }
+
+        {
+          plugin = org-roam-nvim;
+          type = "lua";
+          config = ''
+            require("org-roam").setup({
+                directory = "~/orgfiles",
+                })
+            '';
+        }
+
+        {
+          plugin = typst-preview-nvim;
+          type = "lua";
+          config = ''
+            require("typst-preview").setup()
+            '';
+        }
+
+        nvim-treesitter-textobjects
+
+        nvim-remote-containers
+
+        {
+          plugin = remote-nvim-nvim;
+          type = "lua";
+          config = ''
+            require("remote-nvim").setup()
+            '';
+        }
+        
+
+        {
+          plugin = (nvim-treesitter.withPlugins (_: nvim-treesitter.allGrammars ++ [
+          (pkgs.tree-sitter-grammars.tree-sitter-org-nvim)
+        ]));
+
           type = "lua";
           config = ''
           require("config.treesitter")
           '';
         }
-        (nvim-treesitter.withPlugins (_: nvim-treesitter.allGrammars ++ [
-          (pkgs.tree-sitter-grammars.tree-sitter-norg-meta)
-        ]))
       ];
     extraLuaPackages = luaPkgs : [
       luaPkgs.pathlib-nvim # For neorg
@@ -271,10 +344,12 @@
       # luaPkgs.magick # For image
     ];
     extraPackages = with pkgs; [
-      # Lua
+      # lsp
       lua-language-server
       rust-analyzer
+      tinymist
       selene
+      clang-tools
 
       # Nix
       statix

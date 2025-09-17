@@ -7,6 +7,12 @@
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
+    extraSessionCommands = ''
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
+      export XDG_SESSION_TYPE=wayland
+      export MOZ_ENABLE_WAYLAND=1
+    '';
     config = rec {
       modifier = "Mod1";
       terminal = "wezterm";
@@ -14,28 +20,56 @@
       keybindings = let
         modifier = config.wayland.windowManager.sway.config.modifier;
         menu = config.wayland.windowManager.sway.config.menu;
+        terminal = config.wayland.windowManager.sway.config.terminal;
+        calculator = "rofi -show calc -modi calc -no-show-match -no-sort";
+        window = "rofi -show window";
         browser = "zen";
         explorer = "wezterm start -- yazi";
       in lib.mkOptionDefault {
           "Mod4+B" = "exec ${browser}";
           "Mod4+E" = "exec ${explorer}";
           "Mod4+R" = "exec ${menu}";
+          "Mod4+C" = "exec ${calculator}";
+          "Mod1+Tab" = "exec ${window}";
           "Mod4+L" = "exec hyprlock";
           "Mod4+Shift+S" = "exec screenshot";
+          "Mod1+Shift+Control+H" = "exec swaymsg move workspace to output left";
+          "Mod1+Shift+Control+J" = "exec swaymsg move workspace to output down";
+          "Mod1+Shift+Control+K" = "exec swaymsg move workspace to output up";
+          "Mod1+Shift+Control+L" = "exec swaymsg move workspace to output right";
           "XF86AudioMute" = "exec pamixer -t";
           "XF86AudioRaiseVolume" = "exec pamixer -i 5";
           "XF86AudioLowerVolume" = "exec pamixer -d 5";
+          "Print" = "exec playerctl play-pause";
+          "XF86Favorites" = "exec playerctl next";
+          "XF86Display" = "exec rofi-network-manager";
           "XF86MonBrightnessUp" = "exec brightnessctl set +5%";
           "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+          "XF86Assistant" = "exec ${terminal}";
         };
+      keycodebindings = {
+          "248" = "exec playerctl previous";
+      };
       startup = [
         { command = "wezterm"; }
-        { command = "waybar & swaync & ianny"; }
+        { command = "mako & ianny"; }
+        # XDG Desktop Portal setup
+        {
+          command = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
+          always = false;
+        }
+        {
+          command = "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP";
+          always = false;
+        }
       ];
       input = {
         "*" = {
-          repeat_delay = "250";
-          repeat_rate = "20";
+          xkb_layout = "us,us";
+          xkb_variant = ",colemak_dh";
+          xkb_options = "grp:win_space_toggle";
+          repeat_delay = "200";
+          repeat_rate = "30";
         };
         "type:touchpad" = {
           natural_scroll = "enabled";
@@ -57,6 +91,49 @@
           pointer_accel = "0.2";   # set mouse sensitivity (between -1 and 1)
         };
       };
+
+      output = {
+        "*" = {
+          bg = "#282828 solid_color";
+        };
+      };
+      gaps = {
+        inner = 6;
+      };
+
+      bars = [
+        { command = "waybar"; }
+      ];
+      colors = {
+        focused = {
+          background = "#98971a";
+          border = "#928374";
+          childBorder = "#928374";
+          indicator = "#a89984";
+          text = "#282828";
+        };
+        focusedInactive = {
+          background = "#3c3836";
+          border = "#282828";
+          childBorder = "#282828";
+          indicator = "#a89984";
+          text = "#ebdbb2";
+        };
+        unfocused = {
+          background = "#282828";
+          border = "#282828";
+          childBorder = "#282828";
+          indicator = "#a89984";
+          text = "#ebdbb2";
+        };
+        urgent = {
+          background = "#fb4934";
+          border = "#928374";
+          childBorder = "#928374";
+          indicator = "#a89984";
+          text = "#ebdbb2";
+        };
+      };
     };
     extraConfig = ''
       for_window [class=".*"] inhibit_idle fullscreen
@@ -69,9 +146,12 @@
 
   home.packages = with pkgs; [
     libnotify
-    rofi-wayland
+
+    rofi-network-manager
+    rofi-calc
 
     pavucontrol
+    playerctl
     pamixer
 
     wl-clipboard
@@ -81,31 +161,124 @@
     ianny
   ];
 
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+    plugins = with pkgs; [
+      rofi-network-manager
+      rofi-calc
+    ];
+    theme = let
+      # Use `mkLiteral` for string-like values that should show without
+      # quotes, e.g.:
+      # {
+      #   foo = "abc"; => foo: "abc";
+      #   bar = mkLiteral "abc"; => bar: abc;
+      # };
+      inherit (config.lib.formats.rasi) mkLiteral;
+    in {
+      "*" = {
+        background-color = mkLiteral "#282828";
+        foreground-color = mkLiteral "#ebdbb2";
+        prompt-color = mkLiteral "#98971a";
+        result-color = mkLiteral "#458588";
+        placeholder-color = mkLiteral "#fb4934";
+        border-color = mkLiteral "#FFFFFF";
+        width = 512;
+        font = "IosevkaTerm NF Medium 10";
+      };
+
+      "inputbar" = {
+        padding = mkLiteral "5px 5px";
+        children = map mkLiteral [ "entry"];
+      };
+
+      "textbox" = {
+        text-color = mkLiteral "@result-color";
+      };
+
+      "prompt" = {
+        text-color = mkLiteral "@prompt-color";
+      };
+
+      "entry" = {
+        placeholder = "run";
+        placeholder-color = mkLiteral "@placeholder-color";
+        text-color = mkLiteral "@prompt-color";
+        blink = true;
+        cursor-width = 4;
+      };
+
+      "textbox-prompt-colon" = {
+        expand = false;
+        str = ":";
+        # margin = mkLiteral "0px 0em 0em 0em";
+        text-color = mkLiteral "@prompt-color";
+      };
+      "element" = {
+        padding = mkLiteral "3px";
+        highlight = mkLiteral "bold underline";
+      };
+      "element-text" = {
+        text-color = mkLiteral "@foreground-color";
+        background-color = mkLiteral "transparent";
+      };
+      "element selected" = {
+        background-color = mkLiteral "#d79921";
+      };
+      "element alternate" = {
+        background-color = mkLiteral "#3c3836";
+      };
+    };
+  };
+
   programs.hyprlock = {
     enable = true;
     settings = {
       general = {
         disable_loading_bar = true;
-        grace = 5;
+        grace = 1;
         hide_cursor = false;
-        no_fade_in = false;
+        no_fade_in = true;
+      };
+
+      animations = {
+        enabled = false;
       };
 
       input-field = [
         {
-          size = "200, 50";
+          size = "200, 30";
           position = "0, -80";
           monitor = "";
           dots_center = true;
           fade_on_empty = false;
-          font_color = "rgb(202, 211, 245)";
-          inner_color = "rgb(91, 96, 120)";
-          outer_color = "rgb(24, 25, 38)";
+          font_family = "IosevkaTerm NF Medium 15";
+          font_color = "rgb(ebdbb2)";
+          inner_color = "rgb(1d2021)";
+          outer_color = "rgb(3c3836)";
+          check_color = "rgb(b8bb26)";
+          fail_color = "rgb(fb4934)";
           outline_thickness = 5;
-          placeholder_text = "Password...";
-          shadow_passes = 2;
+          placeholder_text = "password...";
+          fail_text = "authentication failed";
+          shadow_passes = 0;
+          rounding = 0;
         }
       ];
+
+      background = [
+        {
+          color = "rgb(282828)";
+        }
+      ];
+      auth = {
+        # Fingerprint options with quoted attribute names
+        "fingerprint:enabled" = true;
+        "fingerprint:ready_message" = "Scan fingerprint to unlock";
+        "fingerprint:present_message" = "Scanning fingerprint";
+        "fingerprint:retry_delay" = 250;
+      };
     };
   };
 
@@ -149,7 +322,7 @@
         height = 24;
         modules-left = ["sway/workspaces"];
         modules-center = ["sway/window"];
-        modules-right = ["pulseaudio" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock" "custom/notifications"];
+        modules-right = ["pulseaudio" "sway/language" "network" "cpu" "memory" "power-profiles-daemon" "battery" "tray" "clock"];
         "sway/workspaces" = {
           format = "<sup>{icon}</sup> {windows}";
           format-window-separator = "  ";
@@ -163,12 +336,18 @@
             "obsidian" = "󰠮";
           };
         };
+        "sway/language" = {
+          format = "{}";
+          on-click =  "swaymsg input type:keyboard xkb_switch_layout next";
+        };
         tray = {
           icon-size = 21;
           spacing = 10;
         };
         clock = {
-          format-alt = "{:%Y-%m-%d}";
+          format = "{:%d%b%Y %T}";
+          interval = 1;
+          # format-alt = "{:%Y-%m-%d}";
         };
         cpu = {
           format = "{usage}% ";
@@ -224,381 +403,10 @@
           on-click-right = "pavucontrol";
         };
       };
-      "custom/notification" = {
-        "tooltip" = false;
-        format = "{icon}";
-        format-icons = {
-          notification = "<span foreground='red'><sup></sup></span>";
-          none = "";
-          dnd-notification = "<span foreground='red'><sup></sup></span>";
-          dnd-none = "";
-          inhibited-notification = "<span foreground='red'><sup></sup></span>";
-          inhibited-none = "";
-          dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-          dnd-inhibited-none = "";
-        };
-        return-type = "json";
-        exec-if = "which swaync-client";
-        exec = "swaync-client -swb";
-        on-click = "swaync-client -t -sw";
-        on-click-right = "swaync-client -d -sw";
-        escape = true;
-      };
     };
   };
 
-  #SWAY NOTIFICTAION CENTER
-  services.swaync = {
+  services.mako = {
     enable = true;
-    settings = {
-      notification-icon-size = 32;
-      notification-body-image-height = 100;
-      notification-body-image-width = 200;
-      notification-window-width = 380;
-    };
-    style = ''
-        * {
-all: unset;
-     font-size: 14px;
-     font-family: "Ubuntu Nerd Font";
-transition: 200ms;
-        }
-
-      trough highlight {
-background: #cdd6f4;
-      }
-
-      scale trough {
-margin: 0rem 1rem;
-        background-color: #313244;
-        min-height: 8px;
-        min-width: 70px;
-      }
-
-      slider {
-        background-color: #89b4fa;
-      }
-
-      .floating-notifications.background .notification-row .notification-background {
-        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), inset 0 0 0 1px #313244;
-        border-radius: 12.6px;
-margin: 18px;
-        background-color: #1e1e2e;
-color: #cdd6f4;
-padding: 0;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification {
-padding: 7px;
-         border-radius: 12.6px;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification.critical {
-        box-shadow: inset 0 0 7px 0 #f38ba8;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification .notification-content {
-margin: 7px;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification .notification-content .summary {
-color: #cdd6f4;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification .notification-content .time {
-color: #a6adc8;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification .notification-content .body {
-color: #cdd6f4;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * {
-        min-height: 3.4em;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action {
-        border-radius: 7px;
-color: #cdd6f4;
-       background-color: #313244;
-       box-shadow: inset 0 0 0 1px #45475a;
-margin: 7px;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #313244;
-color: #cdd6f4;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #74c7ec;
-color: #cdd6f4;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .close-button {
-margin: 7px;
-padding: 2px;
-         border-radius: 6.3px;
-color: #1e1e2e;
-       background-color: #f38ba8;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .close-button:hover {
-        background-color: #eba0ac;
-color: #1e1e2e;
-      }
-
-      .floating-notifications.background .notification-row .notification-background .close-button:active {
-        background-color: #f38ba8;
-color: #1e1e2e;
-      }
-
-      .control-center {
-        box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), inset 0 0 0 1px #313244;
-        border-radius: 12.6px;
-margin: 18px;
-        background-color: #1e1e2e;
-color: #cdd6f4;
-padding: 14px;
-      }
-
-      .control-center .widget-title > label {
-color: #cdd6f4;
-       font-size: 1.3em;
-      }
-
-      .control-center .widget-title button {
-        border-radius: 7px;
-color: #cdd6f4;
-       background-color: #313244;
-       box-shadow: inset 0 0 0 1px #45475a;
-padding: 8px;
-      }
-
-      .control-center .widget-title button:hover {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #585b70;
-color: #cdd6f4;
-      }
-
-      .control-center .widget-title button:active {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #74c7ec;
-color: #1e1e2e;
-      }
-
-      .control-center .notification-row .notification-background {
-        border-radius: 7px;
-color: #cdd6f4;
-       background-color: #313244;
-       box-shadow: inset 0 0 0 1px #45475a;
-       margin-top: 14px;
-      }
-
-      .control-center .notification-row .notification-background .notification {
-padding: 7px;
-         border-radius: 7px;
-      }
-
-      .control-center .notification-row .notification-background .notification.critical {
-        box-shadow: inset 0 0 7px 0 #f38ba8;
-      }
-
-      .control-center .notification-row .notification-background .notification .notification-content {
-margin: 7px;
-      }
-
-      .control-center .notification-row .notification-background .notification .notification-content .summary {
-color: #cdd6f4;
-      }
-
-      .control-center .notification-row .notification-background .notification .notification-content .time {
-color: #a6adc8;
-      }
-
-      .control-center .notification-row .notification-background .notification .notification-content .body {
-color: #cdd6f4;
-      }
-
-      .control-center .notification-row .notification-background .notification > *:last-child > * {
-        min-height: 3.4em;
-      }
-
-      .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action {
-        border-radius: 7px;
-color: #cdd6f4;
-       background-color: #11111b;
-       box-shadow: inset 0 0 0 1px #45475a;
-margin: 7px;
-      }
-
-      .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #313244;
-color: #cdd6f4;
-      }
-
-      .control-center .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #74c7ec;
-color: #cdd6f4;
-      }
-
-      .control-center .notification-row .notification-background .close-button {
-margin: 7px;
-padding: 2px;
-         border-radius: 6.3px;
-color: #1e1e2e;
-       background-color: #eba0ac;
-      }
-
-      .close-button {
-        border-radius: 6.3px;
-      }
-
-      .control-center .notification-row .notification-background .close-button:hover {
-        background-color: #f38ba8;
-color: #1e1e2e;
-      }
-
-      .control-center .notification-row .notification-background .close-button:active {
-        background-color: #f38ba8;
-color: #1e1e2e;
-      }
-
-      .control-center .notification-row .notification-background:hover {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #7f849c;
-color: #cdd6f4;
-      }
-
-      .control-center .notification-row .notification-background:active {
-        box-shadow: inset 0 0 0 1px #45475a;
-        background-color: #74c7ec;
-color: #cdd6f4;
-      }
-
-      .notification.critical progress {
-        background-color: #f38ba8;
-      }
-
-      .notification.low progress,
-        .notification.normal progress {
-          background-color: #89b4fa;
-        }
-
-      .control-center-dnd {
-        margin-top: 5px;
-        border-radius: 8px;
-background: #313244;
-border: 1px solid #45475a;
-        box-shadow: none;
-      }
-
-      .control-center-dnd:checked {
-background: #313244;
-      }
-
-      .control-center-dnd slider {
-background: #45475a;
-            border-radius: 8px;
-      }
-
-      .widget-dnd {
-margin: 0px;
-        font-size: 1.1rem;
-      }
-
-      .widget-dnd > switch {
-        font-size: initial;
-        border-radius: 8px;
-background: #313244;
-border: 1px solid #45475a;
-        box-shadow: none;
-      }
-
-      .widget-dnd > switch:checked {
-background: #313244;
-      }
-
-      .widget-dnd > switch slider {
-background: #45475a;
-            border-radius: 8px;
-border: 1px solid #6c7086;
-      }
-
-      .widget-mpris .widget-mpris-player {
-background: #313244;
-padding: 7px;
-      }
-
-      .widget-mpris .widget-mpris-title {
-        font-size: 1.2rem;
-      }
-
-      .widget-mpris .widget-mpris-subtitle {
-        font-size: 0.8rem;
-      }
-
-      .widget-menubar > box > .menu-button-bar > button > label {
-        font-size: 3rem;
-padding: 0.5rem 2rem;
-      }
-
-      .widget-menubar > box > .menu-button-bar > :last-child {
-color: #f38ba8;
-      }
-
-      .power-buttons button:hover,
-        .powermode-buttons button:hover,
-        .screenshot-buttons button:hover {
-background: #313244;
-        }
-
-      .control-center .widget-label > label {
-color: #cdd6f4;
-       font-size: 2rem;
-      }
-
-      .widget-buttons-grid {
-        padding-top: 1rem;
-      }
-
-      .widget-buttons-grid > flowbox > flowboxchild > button label {
-        font-size: 2.5rem;
-      }
-
-      .widget-volume {
-        padding-top: 1rem;
-      }
-
-      .widget-volume label {
-        font-size: 1.5rem;
-color: #74c7ec;
-      }
-
-      .widget-volume trough highlight {
-background: #74c7ec;
-      }
-
-      .widget-backlight trough highlight {
-background: #f9e2af;
-      }
-
-      .widget-backlight label {
-        font-size: 1.5rem;
-color: #f9e2af;
-      }
-
-      .widget-backlight .KB {
-        padding-bottom: 1rem;
-      }
-
-      .image {
-        padding-right: 0.5rem;
-      }
-    '';
   };
 }

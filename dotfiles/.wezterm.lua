@@ -27,6 +27,7 @@ local haswork, work = pcall(require, "work")
 
 config.enable_wayland = true
 
+
 --- Setup PowerShell options
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	--- Grab the ver info for later use.

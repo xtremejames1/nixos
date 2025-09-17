@@ -43,7 +43,7 @@
     };
   };
 
-  security.pam.services.hyprlock = {};
+  # security.pam.services.hyprlock = {};
 
   home-manager.users."xtremejames1" = {
     imports = [

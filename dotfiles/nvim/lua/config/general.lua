@@ -76,6 +76,9 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.bo.softtabstop = 2
 
+-- OCAML stuff for CS3110
+vim.opt.rtp:prepend('/home/xtremejames1/.opam/cs3110-2025fa/share/ocp-indent/vim')
+
 vim.cmd 'colorscheme kanagawa'
 vim.cmd 'highlight CursorColumn guibg=#2f3d3d'
 vim.cmd 'highlight CursorLine guibg=#2f3d3d'

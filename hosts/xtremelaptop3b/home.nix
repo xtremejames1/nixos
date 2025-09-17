@@ -7,6 +7,7 @@
         ./../../modules/tmux.nix
         ./../../modules/terminal.nix
         ./../../modules/browser.nix
+        ./../../modules/glance.nix
         ./../../variables.nix
         inputs.nix-doom-emacs-unstraightened.hmModule
     ];
@@ -37,6 +38,35 @@
         steam
         qbittorrent
         wayvnc
+        openmw-tes3mp
+        SDL2
+        sqlite
+        waypipe
+        sioyek
+        zathura
+        kdePackages.okular
+        xournalpp
+        typst
+        octaveFull
+        slack
+        xorg.xhost
+        inkscape
+        orca-slicer
+        usbutils
+        udiskie
+        udisks
+        opam
+        gnumake
+        devpod
+        devpod-desktop
+        vscode
+        wireshark
+        xfce.thunar
+        zip
+        gimp
+        krita
+        rquickshare
+        imagemagick
     ];
 
 # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -51,6 +81,11 @@
 
     home.sessionVariables = {
         NIXHOST = "xtremelaptop3b";
+        NIXOS_OZONE_WL = "1";
+    };
+
+    xdg.mimeApps.defaultApplications = {
+        "application/pdf" = "sioyek.desktop";
     };
 
 # Let Home Manager install and manage itself.
