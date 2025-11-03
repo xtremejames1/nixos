@@ -115,7 +115,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --  - settings (table): Override the default settings passed when initializing the server.
 --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 local servers = {
-  clangd = { },
+  clangd = {},
   -- gopls = {},
   pyright = {},
   rust_analyzer = {
@@ -141,9 +141,9 @@ local servers = {
   -- But for many setups, the LSP (`tsserver`) will work just fine
   -- tsserver = {},
   --
-  nil_ls = { },
+  nil_ls = {},
 
-  ocamllsp = { },
+  ocamllsp = {},
 
   lua_ls = {
     -- cmd = {...},
@@ -161,10 +161,13 @@ local servers = {
   },
 }
 
-local lspconfig = require('lspconfig')
+
+-- local lspconfig = require('lspconfig')
 for server, config in pairs(servers) do
   -- passing config.capabilities to blink.cmp merges with the capabilities in your
   -- `opts[server].capabilities, if you've defined it
   config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-  lspconfig[server].setup(config)
+  vim.lsp.config(server, config)
+  vim.lsp.enable(server)
+  -- lspconfig[server].setup(config)
 end

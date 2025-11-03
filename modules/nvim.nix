@@ -118,7 +118,7 @@
           type = "lua";
           config = ''
             require("todo-comments").setup{}
-            '';
+          '';
         }
         kanagawa-nvim
         {
@@ -251,30 +251,30 @@
           type = "lua";
           config = ''
           require("config.nabla")
-            '';
+          '';
         }
 
-# For plugins not in nixpkgs, fetch from GitHub
+        # For plugins not in nixpkgs, fetch from GitHub
         (pkgs.vimUtils.buildVimPlugin {
-         name = "org-bullets";
-         src = pkgs.fetchFromGitHub {
-         owner = "nvim-orgmode";
-         repo = "org-bullets.nvim";
-         rev = "21437cf";
-         sha256 = "sha256-cRcO0TDY0v9c/H5vQ1v96WiEkIhJDZkPcw+P58XNL9w="; # Use lib.fakeSha256 first, then replace
-         };
-         })
+          name = "org-bullets";
+          src = pkgs.fetchFromGitHub {
+            owner = "nvim-orgmode";
+            repo = "org-bullets.nvim";
+            rev = "21437cf";
+            sha256 = "/l8IfvVSPK7pt3Or39+uenryTM5aBvyJZX5trKNh0X0="; # Use lib.fakeSha256 first, then replace
+          };
+        })
 
         (pkgs.vimUtils.buildVimPlugin {
-         name = "telescope-orgmode";
-         src = pkgs.fetchFromGitHub {
-         owner = "nvim-orgmode";
-         repo = "telescope-orgmode.nvim";
-         rev = "a73d9b7";
-         sha256 = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE="; # Use lib.fakeSha256 first, then replace
-         };
-         doCheck = false;
-         })
+          name = "telescope-orgmode";
+          src = pkgs.fetchFromGitHub {
+            owner = "nvim-orgmode";
+            repo = "telescope-orgmode.nvim";
+            rev = "a73d9b7";
+            sha256 = "sha256-u3ZntL8qcS/SP1ZQqgx5q6zfGb/8L8xiguvsmU1M5XE="; # Use lib.fakeSha256 first, then replace
+          };
+          doCheck = false;
+        })
 
 
         {
@@ -293,7 +293,7 @@
             vim.keymap.set('n', '<leader>or', require('telescope').extensions.orgmode.refile_heading)
             vim.keymap.set('n', '<leader>fh', require('telescope').extensions.orgmode.search_headings)
             vim.keymap.set('n', '<leader>li', require('telescope').extensions.orgmode.insert_link)
-            '';
+          '';
         }
 
         {
@@ -303,7 +303,7 @@
             require("org-roam").setup({
                 directory = "~/orgfiles",
                 })
-            '';
+          '';
         }
 
         {
@@ -311,7 +311,7 @@
           type = "lua";
           config = ''
             require("typst-preview").setup()
-            '';
+          '';
         }
 
         nvim-treesitter-textobjects
@@ -323,14 +323,36 @@
           type = "lua";
           config = ''
             require("remote-nvim").setup()
-            '';
+          '';
         }
-        
+
+        {
+          plugin = conform-nvim;
+          type = "lua";
+          config = ''
+            require("conform").setup({
+              formatters_by_ft = {
+    lua = { "stylua" },
+    -- Conform will run multiple formatters sequentially
+    python = { "isort", "black" },
+    -- You can customize some of the format options for the filetype (:help conform.format)
+    rust = { "rustfmt", lsp_format = "fallback" },
+    ocaml = {"ocamlformat"},
+    nix = {"alejandra", "nixfmt"}
+  },
+   format_on_save = {
+    -- These options will be passed to conform.format()
+    timeout_ms = 500,
+    lsp_format = "fallback",
+  },
+            })
+          '';
+        }
 
         {
           plugin = (nvim-treesitter.withPlugins (_: nvim-treesitter.allGrammars ++ [
-          (pkgs.tree-sitter-grammars.tree-sitter-org-nvim)
-        ]));
+            (pkgs.tree-sitter-grammars.tree-sitter-org-nvim)
+          ]));
 
           type = "lua";
           config = ''
@@ -355,6 +377,7 @@
       statix
       nixpkgs-fmt
       nil
+      alejandra
 
       # Image
       # imagemagick

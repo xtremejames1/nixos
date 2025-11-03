@@ -71,7 +71,8 @@ end
 
 -- drip
 -- config.color_scheme = "Gruvbox dark, hard (base16)"
-config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "Kanagawa (Gogh)"
+config.color_scheme = 'Gruvbox Dark (Gogh)'
 config.font = wezterm.font("IosevkaTerm Nerd Font Mono", { weight = "Medium", italic = false })
 config.font_size = 10
 config.default_cursor_style = "BlinkingBar"

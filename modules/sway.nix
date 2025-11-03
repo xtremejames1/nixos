@@ -80,6 +80,7 @@
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
           pointer_accel = "0.8";   # set mouse sensitivity (between -1 and 1)
           scroll_factor = "0.2";    # set scroll speed (between 0.0 and 1.0)
+          drag_lock = "disabled";
         };
         "type:mouse" = {
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
@@ -88,7 +89,7 @@
         "2:10:TPPS/2_IBM_TrackPoint" = {
           dwt = "enabled";         # disable (touchpad) while typing
           accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.2";   # set mouse sensitivity (between -1 and 1)
+          pointer_accel = "0.18";   # set mouse sensitivity (between -1 and 1)
         };
       };
 
@@ -163,7 +164,7 @@
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    # package = pkgs.rofi-wayland;
     plugins = with pkgs; [
       rofi-network-manager
       rofi-calc
