@@ -83,6 +83,23 @@
     wine
     winetricks
     caligula
+    gitkraken
+    ruby
+    SDL2
+    libffi
+    gitkraken
+    obs-studio
+    kdePackages.kdenlive
+    arduino-ide
+    unrar
+    qmk
+    qmk-udev-rules
+    qmk_hid
+    via
+    vial
+    putty
+    opencode
+    gemini-cli
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -94,6 +111,7 @@
   # CUSTOM MODULE OPTIONS
   programs.zsh.shellAliases.vimhome = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3b/home.nix";
   programs.zsh.shellAliases.vimconfig = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3b/configuration.nix";
+  programs.zsh.shellAliases.ad = lib.mkForce "~/nixos/dotfiles/scripts/wayvnc_setup.sh";
 
   home.sessionVariables = {
     NIXHOST = "xtremelaptop3b";

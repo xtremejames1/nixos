@@ -143,7 +143,15 @@ local servers = {
   --
   nil_ls = {},
 
-  ocamllsp = {},
+  ocamllsp = {
+    settings = {
+      codelens = { enable = true },
+      inlayHints = { hintPatternVariables = true, hintLetBindings = true },
+      extendedHover = { enable = true },
+      syntaxDocumentation = { enable = true },
+      merlinJumpCodeActions = { enable = true },
+    }
+  },
 
   lua_ls = {
     -- cmd = {...},

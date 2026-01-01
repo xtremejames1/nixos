@@ -1,7 +1,12 @@
-{ pkgs, lib, config, ... }:
 {
+  pkgs,
+  lib,
+  config,
+  ...
+}: {
   imports = [
     ./screenshot.nix
+    ./gtk.nix
   ];
 
   wayland.windowManager.sway = {
@@ -25,7 +30,8 @@
         window = "rofi -show window";
         browser = "zen";
         explorer = "wezterm start -- yazi";
-      in lib.mkOptionDefault {
+      in
+        lib.mkOptionDefault {
           "Mod4+B" = "exec ${browser}";
           "Mod4+E" = "exec ${explorer}";
           "Mod4+R" = "exec ${menu}";
@@ -40,6 +46,8 @@
           "XF86AudioMute" = "exec pamixer -t";
           "XF86AudioRaiseVolume" = "exec pamixer -i 5";
           "XF86AudioLowerVolume" = "exec pamixer -d 5";
+          "XF86AudioNext" = "exec playerctl next";
+          "XF86AudioPrev" = "exec playerctl previous";
           "Print" = "exec playerctl play-pause";
           "XF86Favorites" = "exec playerctl next";
           "XF86Display" = "exec rofi-network-manager";
@@ -48,11 +56,11 @@
           "XF86Assistant" = "exec ${terminal}";
         };
       keycodebindings = {
-          "248" = "exec playerctl previous";
+        "248" = "exec playerctl previous";
       };
       startup = [
-        { command = "wezterm"; }
-        { command = "mako & ianny"; }
+        {command = "wezterm";}
+        {command = "mako";}
         # XDG Desktop Portal setup
         {
           command = "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway";
@@ -73,23 +81,23 @@
         };
         "type:touchpad" = {
           natural_scroll = "enabled";
-          tap = "enabled";         # enables click-on-tap
-          tap_button_map = "lrm";  # tap with 1 finger = left click, 2 fingers = right click, 3 fingers = middle click
-          dwt = "enabled";         # disable (touchpad) while typing
-          dwtp = "enabled";        # disable (touchpad) while track pointing
-          accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.8";   # set mouse sensitivity (between -1 and 1)
-          scroll_factor = "0.2";    # set scroll speed (between 0.0 and 1.0)
+          tap = "enabled"; # enables click-on-tap
+          tap_button_map = "lrm"; # tap with 1 finger = left click, 2 fingers = right click, 3 fingers = middle click
+          dwt = "enabled"; # disable (touchpad) while typing
+          dwtp = "enabled"; # disable (touchpad) while track pointing
+          accel_profile = "flat"; # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
+          pointer_accel = "0.8"; # set mouse sensitivity (between -1 and 1)
+          scroll_factor = "0.2"; # set scroll speed (between 0.0 and 1.0)
           drag_lock = "disabled";
         };
         "type:mouse" = {
-          accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.8";   # set mouse sensitivity (between -1 and 1)
+          accel_profile = "flat"; # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
+          pointer_accel = "0.8"; # set mouse sensitivity (between -1 and 1)
         };
         "2:10:TPPS/2_IBM_TrackPoint" = {
-          dwt = "enabled";         # disable (touchpad) while typing
-          accel_profile = "flat";  # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
-          pointer_accel = "0.18";   # set mouse sensitivity (between -1 and 1)
+          dwt = "enabled"; # disable (touchpad) while typing
+          accel_profile = "flat"; # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
+          pointer_accel = "0.18"; # set mouse sensitivity (between -1 and 1)
         };
       };
 
@@ -103,7 +111,7 @@
       };
 
       bars = [
-        { command = "waybar"; }
+        {command = "waybar";}
       ];
       colors = {
         focused = {
@@ -139,7 +147,7 @@
     extraConfig = ''
       for_window [class=".*"] inhibit_idle fullscreen
       for_window [app_id=".*"] inhibit_idle fullscreen
-      '';
+    '';
   };
 
   # Enable a secret service provider
@@ -148,10 +156,12 @@
   home.packages = with pkgs; [
     libnotify
 
+    networkmanagerapplet
+
     rofi-network-manager
     rofi-calc
 
-    pavucontrol
+    pwvucontrol
     playerctl
     pamixer
 
@@ -191,7 +201,7 @@
 
       "inputbar" = {
         padding = mkLiteral "5px 5px";
-        children = map mkLiteral [ "entry"];
+        children = map mkLiteral ["entry"];
       };
 
       "textbox" = {
@@ -285,14 +295,10 @@
 
   services.swayidle = {
     enable = true;
-    events = [
-        { event = "lock"; command = "${pkgs.hyprlock}/bin/hyprlock"; }
-        { event = "before-sleep"; command = "${pkgs.hyprlock}/bin/hyprlock";
-        }
-    ];
-    timeouts = [
-        { timeout = 180; command = "${pkgs.hyprlock}/bin/hyprlock"; }
-    ];
+    events = {
+      lock = "${pkgs.hyprlock}/bin/hyprlock";
+      before-sleep = "${pkgs.hyprlock}/bin/hyprlock";
+    };
   };
 
   # Cursors
@@ -302,15 +308,15 @@
   home.file.".icons/default".source = "${pkgs.apple-cursor}/share/icons/macOS";
 
   home.file = {
-    ".config/waybar/style.css".source = config.dotfiles.directory+"/.config/waybar/style.css";
-    ".config/mako/config".source = config.dotfiles.directory+"/.config/mako/config";
+    ".config/waybar/style.css".source = config.dotfiles.directory + "/.config/waybar/style.css";
+    ".config/mako/config".source = config.dotfiles.directory + "/.config/mako/config";
     ".config/anyrun" = {
       recursive = true;
-      source = config.dotfiles.directory+"/.config/anyrun";
+      source = config.dotfiles.directory + "/.config/anyrun";
     };
     ".config/yazi" = {
       recursive = true;
-      source = config.dotfiles.directory+"/.config/yazi";
+      source = config.dotfiles.directory + "/.config/yazi";
     };
   };
 
@@ -339,7 +345,7 @@
         };
         "sway/language" = {
           format = "{}";
-          on-click =  "swaymsg input type:keyboard xkb_switch_layout next";
+          on-click = "swaymsg input type:keyboard xkb_switch_layout next";
         };
         tray = {
           icon-size = 21;
@@ -385,7 +391,7 @@
           format-wifi = "{essid} ({signalStrength}%) ";
           format-ethernet = "{ifname}: {ipaddr}/{cidr} ";
           format-disconnected = "Disconnected ⚠";
-          on-click-right = "wezterm start -- nmtui";
+          on-click-right = "nm-applet";
         };
         pulseaudio = {
           format = "{volume}% {icon}";
@@ -401,7 +407,7 @@
             default = ["" ""];
           };
           on-click = "pamixer -t";
-          on-click-right = "pavucontrol";
+          on-click-right = "pwvucontrol";
         };
       };
     };

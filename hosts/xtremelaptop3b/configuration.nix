@@ -1,20 +1,22 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, lib, inputs, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./../../variables.nix
-      ./../../modules/windowmanager.nix
-      ./../../modules/fingerprint.nix
-      ./../../modules/screencast.nix
-      inputs.home-manager.nixosModules.default
-    ];
-
+  config,
+  lib,
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./../../variables.nix
+    ./../../modules/windowmanager.nix
+    ./../../modules/fingerprint.nix
+    ./../../modules/screencast.nix
+    inputs.home-manager.nixosModules.default
+  ];
 
   nix.settings.experimental-features = "nix-command flakes";
   nixpkgs.config.allowUnfree = true;
@@ -27,7 +29,6 @@
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
-
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -46,10 +47,12 @@
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-  
+
   services.udisks2.enable = true;
   services.gvfs.enable = true;
-  services.udev.packages = [ pkgs.udiskie ];
+  services.udev = {
+    packages = [pkgs.udiskie];
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -58,28 +61,26 @@
   };
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
-  services.interception-tools =
-    let
-      dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
-        MAPPINGS:
-          - KEY: KEY_CAPSLOCK
-            TAP: KEY_ESC
-            HOLD: KEY_LEFTCTRL
-      '';
-    in
-    {
-      enable = true;
-      plugins = lib.mkForce [
-        pkgs.interception-tools-plugins.dual-function-keys
-      ];
-      udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-          DEVICE:
-            NAME: "USB Keyboard"
-            EVENTS:
-              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
-      '';
-    };
+  services.interception-tools = let
+    dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
+      MAPPINGS:
+        - KEY: KEY_CAPSLOCK
+          TAP: KEY_ESC
+          HOLD: KEY_LEFTCTRL
+    '';
+  in {
+    enable = true;
+    plugins = lib.mkForce [
+      pkgs.interception-tools-plugins.dual-function-keys
+    ];
+    udevmonConfig = ''
+      - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+        DEVICE:
+          NAME: "USB Keyboard"
+          EVENTS:
+            EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+    '';
+  };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -106,7 +107,7 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-  
+
   services.cloudflare-warp.enable = true;
 
   services.avahi = {
@@ -128,7 +129,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.xtremejames1 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "docker"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
@@ -139,14 +140,13 @@
     powertop
     pulseaudio
     openal
-
   ];
   environment.variables = {
     RUST_BACKTRACE = 1;
   };
 
   programs.zsh.enable = true;
-  
+
   security.polkit.enable = true;
 
   fonts.packages = with pkgs; [
@@ -184,23 +184,12 @@
 
   networking = {
     firewall = {
-      allowedTCPPorts = [ 5900 25565 25560 8308 8765 ];
-      allowedUDPPorts = [ 5900 25565 25560 2368 8765 ];
+      allowedTCPPorts = [5900 25565 25560 8308 8765];
+      allowedUDPPorts = [5900 25565 25560 2368 8765];
     };
     hostName = "xtremelaptop3b"; # Define your hostname.
-    networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-    interfaces = {
-      enp1s0f0 = {
-        ipv4.addresses = [{
-          address = "192.168.1.50";
-          prefixLength = 24;
-        }];
-      };
-    };
-
+    networkmanager.enable = true; # Easiest to use and most distros use this by default.
   };
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   home-manager = {
     extraSpecialArgs = {
@@ -235,6 +224,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
-

@@ -1,14 +1,19 @@
-{ inputs, pkgs, config, lib, ... }:
 {
+  inputs,
+  pkgs,
+  config,
+  lib,
+  ...
+}: {
   systemd.user.services.kanshi = {
     description = "kanshi daemon";
     environment = {
-      WAYLAND_DISPLAY="wayland-1";
+      WAYLAND_DISPLAY = "wayland-1";
       DISPLAY = ":0";
     };
     serviceConfig = {
       Type = "simple";
-      ExecStart =  ''${pkgs.kanshi}/bin/kanshi -c kanshi_config_file'';
+      ExecStart = ''${pkgs.kanshi}/bin/kanshi -c kanshi_config_file'';
     };
   };
 
@@ -27,7 +32,7 @@
     keyboards = {
       # The name is just the name of the configuration file, it does not really matter
       default = {
-        ids = [ "*" ]; # what goes into the [id] section, here we select all keyboards
+        ids = ["*"]; # what goes into the [id] section, here we select all keyboards
         # Everything but the ID section:
         settings = {
           # The main layer, if you choose to declare it in Nix
@@ -37,11 +42,15 @@
           otherlayer = {};
         };
         extraConfig = ''
-        # put here any extra-config, e.g. you can copy/paste here directly a configuration, just remove the ids part
+          # put here any extra-config, e.g. you can copy/paste here directly a configuration, just remove the ids part
         '';
       };
     };
   };
+
+  # BLUETOOTH
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   # security.pam.services.hyprlock = {};
 

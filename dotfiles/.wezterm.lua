@@ -16,10 +16,31 @@ local mux = wezterm.mux
 local act = wezterm.action
 local keys = {
 	{ key = "T", mods = "SHIFT|CTRL", action = wezterm.action.ShowLauncher },
-	{ key = 'Enter',
+	{
+		key = 'Enter',
 		mods = 'ALT',
 		action = wezterm.action.DisableDefaultAssignment,
-	}
+	},
+	{
+		key = "H",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Left',
+	},
+	{
+		key = "J",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Down',
+	},
+	{
+		key = "K",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Up',
+	},
+	{
+		key = "L",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Right',
+	},
 }
 local mouse_bindings = {}
 local launch_menu = {}
