@@ -28,7 +28,8 @@
   # release notes.
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
-  nixpkgs.overlays = [inputs.nix-doom-emacs-unstraightened.overlays.default];
+  # nixpkgs.overlays moved to system configuration (flake.nix) when useGlobalPkgs is enabled
+  # nixpkgs.overlays = [inputs.nix-doom-emacs-unstraightened.overlays.default];
 
   home.packages = with pkgs; [
     fastfetch
@@ -61,10 +62,9 @@
     opam
     gnumake
     devpod
-    # devpod-desktop
     vscode
     wireshark
-    xfce.thunar
+    thunar
     zip
     gimp
     krita
@@ -99,19 +99,34 @@
     vial
     putty
     opencode
-    gemini-cli
+    python3
+    direnv
+    # gemini-cli  # Temporarily disabled due to npm cache issue
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
 
   home.file = {
+    # Make pythonify script executable and available in PATH
+    ".config/nix/scripts/pythonify.sh" = {
+      source = ../../dotfiles/scripts/pythonify.sh;
+      executable = true;
+    };
+  };
+
+  # Add direnv hook to your shell
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
 
   # CUSTOM MODULE OPTIONS
   programs.zsh.shellAliases.vimhome = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3b/home.nix";
   programs.zsh.shellAliases.vimconfig = lib.mkForce "nvim ~/nixos/hosts/xtremelaptop3b/configuration.nix";
   programs.zsh.shellAliases.ad = lib.mkForce "~/nixos/dotfiles/scripts/wayvnc_setup.sh";
+  programs.zsh.shellAliases.pythonify = "$HOME/.config/nix/scripts/pythonify.sh";
 
   home.sessionVariables = {
     NIXHOST = "xtremelaptop3b";

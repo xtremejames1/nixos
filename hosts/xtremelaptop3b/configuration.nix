@@ -51,7 +51,7 @@
   services.udisks2.enable = true;
   services.gvfs.enable = true;
   services.udev = {
-    packages = [pkgs.udiskie];
+    packages = with pkgs; [udiskie qmk qmk-udev-rules qmk_hid via vial];
   };
 
   # Configure keymap in X11
@@ -138,7 +138,6 @@
   environment.systemPackages = with pkgs; [
     sbctl
     powertop
-    pulseaudio
     openal
   ];
   environment.variables = {
@@ -146,6 +145,7 @@
   };
 
   programs.zsh.enable = true;
+  programs.dconf.enable = true;
 
   security.polkit.enable = true;
 
@@ -192,6 +192,7 @@
   };
 
   home-manager = {
+    useGlobalPkgs = true; # Use system pkgs with overlays
     extraSpecialArgs = {
       inherit inputs;
     };

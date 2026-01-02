@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, config, ...}: {
   gtk = {
     enable = true;
 
@@ -19,10 +19,13 @@
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
-  # 4. Modern apps (GTK4/Libadwaita) use dconf for theme settings
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
+  # Only configure dconf if dconf package is available in the system
+  # This prevents errors when dconf service isn't running
+  dconf = lib.mkIf (config.dconf.enable or false) {
+    settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
     };
   };
 }

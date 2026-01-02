@@ -59,6 +59,7 @@
         "248" = "exec playerctl previous";
       };
       startup = [
+        {command = "easyeffects";}
         {command = "wezterm";}
         {command = "mako";}
         # XDG Desktop Portal setup
@@ -164,6 +165,7 @@
     pwvucontrol
     playerctl
     pamixer
+    easyeffects
 
     wl-clipboard
     brightnessctl
