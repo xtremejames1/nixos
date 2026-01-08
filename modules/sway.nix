@@ -117,7 +117,7 @@
         }
     ];
     timeouts = [
-        { timeout = 180; command = "${pkgs.hyprlock}/bin/hyprlock"; }
+        { timeout = 300; command = "${pkgs.hyprlock}/bin/hyprlock"; }
     ];
   };
 

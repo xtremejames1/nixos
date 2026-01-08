@@ -12,10 +12,9 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../../variables.nix
-      ./../../modules/keyring.nix
-      ./../../modules/hyprland.nix
-      ./../../modules/webdev.nix
-      inputs.home-manager.nixosModules.default ];
+      ./../../modules/windowmanager.nix
+      inputs.home-manager.nixosModules.default
+    ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -32,66 +31,19 @@ in
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  services.displayManager.sddm = {
-    package = pkgs.kdePackages.sddm;
-    enable = true;
-    theme = "catppuccin-mocha";
-    wayland.enable = true;
-  };
+  time.timeZone = "America/New_York";
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  # services.xserver.xkb = {
+  #   layout = "us";
+  #   variant = "";
+  # };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  services = {
-    syncthing = {
-      enable = true;
-      user = "xtremejames1";
-      dataDir = "/home/xtremejames1/Documents";    # Default folder for new synced folders
-      overrideDevices = true;     # overrides any devices added or deleted through the WebUI
-      overrideFolders = true;     # overrides any folders added or deleted through the WebUI
-      settings = {
-        devices = {
-          "xtremephone1" = { id = "OTA4OPK-FHGM4YC-M3HE7G5-OLDM5AS-RAVN7CU-ZR3DLOH-R3KRKRE-R254UQN"; };
-          "xtremecomputer1" = { id = "B5LVKBB-VEA4UZU-WZ6LRKX-3ZUH7J7-BFXR4I7-TUPTP2M-QEJGN5M-MF522QI"; };
-          "xtremelaptop2" = { id = "7TZCVZS-YLJ62OU-EAT7NBH-KZIPLFN-R5TCEPW-X2YAO3U-YSUH5YW-B44JYQ4"; };
-        };
-        folders = {
-          "5excn-sxe5v" = {         # Name of folder in Syncthing, also the folder ID
-            path = "/home/xtremejames1/Documents/ObsidianVault/";    # Which folder to add to Syncthing
-              devices = [ "xtremephone1" "xtremecomputer1" "xtremelaptop2" ];      # Which devices to share the folder with
-          };
-        };
-      };
-    };
-  };
-
 
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -128,46 +80,17 @@ in
   };
 
   programs.zsh.enable = true;
-  programs.hyprland.enable = true;
+
+  security.polkit.enable = true;
+  services.cloudflare-warp.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes"];
-
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    vivaldi
-    vivaldi-ffmpeg-codecs
-    widevine-cdm
-    gcc
-    lua-language-server
-    syncthing
-    krita
-    fastfetch
-    wireplumber
-    obsidian
-    syncthing
-    gnupg
-
-#media viewing
-    sioyek
-    zathura
-    
-    kdePackages.elisa
-    imv
-
-    mpv
-
-
-    # catppuccin-sddm
-    catppuccin-sddm
-    (unstable.catppuccin-sddm.override {
-      flavor = "mocha";
-      font = "Aptos Bold";
-    })
+    powertop
   ];
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "IosevkaTerm" ]; })
+    pkgs.nerd-fonts.iosevka-term
   ];
 
   services.tlp = {
@@ -196,6 +119,7 @@ environment.etc."current-system-packages".text =
     users = {
       "xtremejames1" = import ./home.nix;
     };
+    backupFileExtension = "backup";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -207,6 +131,16 @@ environment.etc."current-system-packages".text =
   # };
 
   # List services that you want to enable:
+
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+    };
+  };
 
   # Enable the OpenSSH daemon.
    services.openssh.enable = true;
@@ -223,6 +157,6 @@ environment.etc."current-system-packages".text =
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 
 }
