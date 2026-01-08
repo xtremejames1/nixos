@@ -1,18 +1,22 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, lib, inputs, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./../../variables.nix
-      ./../../modules/windowmanager.nix
-      ./../../modules/fingerprint.nix
-      inputs.home-manager.nixosModules.default
-    ];
+  config,
+  lib,
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./../../variables.nix
+    ./../../modules/windowmanager.nix
+    ./../../modules/fingerprint.nix
+    ./../../modules/screencast.nix
+    inputs.home-manager.nixosModules.default
+  ];
 
   nix.settings.experimental-features = "nix-command flakes";
   nixpkgs.config.allowUnfree = true;
@@ -25,11 +29,6 @@
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
-
-  networking.hostName = "xtremelaptop3b"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -48,34 +47,40 @@
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-  
+
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  services.udev = {
+    packages = with pkgs; [udiskie qmk qmk-udev-rules qmk_hid via vial];
+  };
 
   # Configure keymap in X11
-  services.xserver.xkb.layout = "us";
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "colemak_dh";
+  };
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
-  services.interception-tools =
-    let
-      dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
-        MAPPINGS:
-          - KEY: KEY_CAPSLOCK
-            TAP: KEY_ESC
-            HOLD: KEY_LEFTCTRL
-      '';
-    in
-    {
-      enable = true;
-      plugins = lib.mkForce [
-        pkgs.interception-tools-plugins.dual-function-keys
-      ];
-      udevmonConfig = ''
-        - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-          DEVICE:
-            NAME: "USB Keyboard"
-            EVENTS:
-              EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
-      '';
-    };
+  services.interception-tools = let
+    dfkConfig = pkgs.writeText "dual-function-keys.yaml" ''
+      MAPPINGS:
+        - KEY: KEY_CAPSLOCK
+          TAP: KEY_ESC
+          HOLD: KEY_LEFTCTRL
+    '';
+  in {
+    enable = true;
+    plugins = lib.mkForce [
+      pkgs.interception-tools-plugins.dual-function-keys
+    ];
+    udevmonConfig = ''
+      - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.dual-function-keys}/bin/dual-function-keys -c ${dfkConfig} | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+        DEVICE:
+          NAME: "USB Keyboard"
+          EVENTS:
+            EV_KEY: [[KEY_CAPSLOCK, KEY_ESC, KEY_LEFTCTRL]]
+    '';
+  };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -86,12 +91,35 @@
   services.pipewire = {
     enable = true;
     pulse.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
   };
+
+  security.rtkit.enable = true;
+  services.pulseaudio.enable = false;
+
+  # Set audio-related environment variables
+  environment.variables = {
+    PULSE_RUNTIME_PATH = "/run/user/1000/pulse";
+  };
+
+  hardware.graphics.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-  
+
   services.cloudflare-warp.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+    };
+  };
 
   services.tlp.enable = true;
 
@@ -101,7 +129,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.xtremejames1 = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel" "docker"]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
@@ -110,19 +138,34 @@
   environment.systemPackages = with pkgs; [
     sbctl
     powertop
+    openal
   ];
   environment.variables = {
     RUST_BACKTRACE = 1;
   };
 
   programs.zsh.enable = true;
-  
+  programs.dconf.enable = true;
+
   security.polkit.enable = true;
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka-term
     overpass
   ];
+
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      experimental = true;
+      default-address-pools = [
+        {
+          base = "172.30.0.0/16";
+          size = 24;
+        }
+      ];
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -138,12 +181,18 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 5900 ];
-  networking.firewall.allowedUDPPorts = [ 5900 ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+
+  networking = {
+    firewall = {
+      allowedTCPPorts = [5900 25565 25560 8308 8765];
+      allowedUDPPorts = [5900 25565 25560 2368 8765];
+    };
+    hostName = "xtremelaptop3b"; # Define your hostname.
+    networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  };
 
   home-manager = {
+    useGlobalPkgs = true; # Use system pkgs with overlays
     extraSpecialArgs = {
       inherit inputs;
     };
@@ -176,6 +225,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
-

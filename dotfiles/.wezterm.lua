@@ -16,16 +16,38 @@ local mux = wezterm.mux
 local act = wezterm.action
 local keys = {
 	{ key = "T", mods = "SHIFT|CTRL", action = wezterm.action.ShowLauncher },
-	{ key = 'Enter',
+	{
+		key = 'Enter',
 		mods = 'ALT',
 		action = wezterm.action.DisableDefaultAssignment,
-	}
+	},
+	{
+		key = "H",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Left',
+	},
+	{
+		key = "J",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Down',
+	},
+	{
+		key = "K",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Up',
+	},
+	{
+		key = "L",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection 'Right',
+	},
 }
 local mouse_bindings = {}
 local launch_menu = {}
 local haswork, work = pcall(require, "work")
 
 config.enable_wayland = true
+
 
 --- Setup PowerShell options
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
@@ -70,7 +92,8 @@ end
 
 -- drip
 -- config.color_scheme = "Gruvbox dark, hard (base16)"
-config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "Kanagawa (Gogh)"
+config.color_scheme = 'Gruvbox Dark (Gogh)'
 config.font = wezterm.font("IosevkaTerm Nerd Font Mono", { weight = "Medium", italic = false })
 config.font_size = 10
 config.default_cursor_style = "BlinkingBar"

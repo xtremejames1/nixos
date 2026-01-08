@@ -4,12 +4,13 @@
         ./zsh.nix
         ./tmux.nix
     ];
-  home.packages = with pkgs; [
+    home.packages = with pkgs; [
         wezterm
         kitty
-  ];
+    ];
 
- home.file = {
+    home.file = {
         ".wezterm.lua".source = config.dotfiles.directory+"/.wezterm.lua";
- };
+    };
+    services.ssh-agent.enable = true;
 }

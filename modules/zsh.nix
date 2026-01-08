@@ -27,6 +27,7 @@
 
     };
     initContent = ''
+      eval $(opam env)
       path+=('/home/xtremejames1/.local/bin')
       export PAT
 

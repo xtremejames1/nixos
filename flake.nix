@@ -44,7 +44,7 @@
       };
 
       lanzaboote = {
-        url = "github:nix-community/lanzaboote/v0.4.2";
+        url = "github:nix-community/lanzaboote";
 
         inputs.nixpkgs.follows = "nixpkgs";
       };
@@ -116,8 +116,12 @@
             ./hosts/xtremelaptop3b/configuration.nix
             ./users/xtremejames1.nix
             ./variables.nix
-            ({ pkgs, ... }: {
-              nixpkgs.overlays = [ rust-overlay.overlays.default ];
+            ({ pkgs, inputs, ... }: {
+              nixpkgs.overlays = [ 
+                rust-overlay.overlays.default
+                inputs.nix-doom-emacs-unstraightened.overlays.default
+                (import ./overlays)  # Custom overlays (dfu-programmer C23 fix, etc.)
+              ];
               environment.systemPackages = [ (pkgs.rust-bin.stable.latest.default.override {
                 extensions = [ "rust-src" ];
                 targets = [ "thumbv6m-none-eabi" ];
